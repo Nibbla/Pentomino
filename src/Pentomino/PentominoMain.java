@@ -23,6 +23,8 @@ public class PentominoMain extends Canvas implements Runnable,Display{
 	protected TetrisGame game;
 	private Controller controller;
 	private Board board;
+	private int endgamecount;
+	private Timer timerEndgame;
 	private static PentominoMain pm ;
 	
 	public static void main(String[] args){
@@ -125,8 +127,17 @@ public class PentominoMain extends Canvas implements Runnable,Display{
 	 * @param pm 
 	 * 
 	 */
-	protected static void startNewGame(PentominoMain pm) {
+	protected static void startNewGame(final PentominoMain pm) {
 		pm.game = new Game((Control)pm.controller, (Display)pm, null);
+		pm.endgamecount=0;
+		if (pm.timerEndgame != null) pm.timerEndgame.stop();
+		pm.timerEndgame = new Timer(6000, new ActionListener() {
+			
+			public void actionPerformed(ActionEvent e) {
+				pm.endgamecount++;
+				
+			}
+		});
 		pm.game.start();
 	}
 
@@ -207,6 +218,55 @@ public class PentominoMain extends Canvas implements Runnable,Display{
 			g.setColor(Color.BLACK);
 			g.drawRect(squareWidth*ps[i].getX(), squareHeight*ps[i].getY(), squareWidth, squareHeight);	
 		}
+		if (board2.isEndgame()){
+			
+			timerEndgame.start();
+			drawEndgame(g, width2, height2, board2);
+		}
+	}
+
+	private void drawEndgame(Graphics2D g, int width2, int height2, Board board2) {
+		Square[][] s = board2.getFullBoard();
+		int count = 0;
+		
+		int sH = s.length;
+		int sW = s[0].length;
+
+		int squareWidth = width2/sW; 
+		int squareHeight = height2/sH;
+		
+		
+		for (int j = sH-1; j >=0;j--){
+			for (int i = sW-1; i>=0;i--){
+				
+				Color m = ColorE.colorM();
+				if (s[j][i].getC().equals(Color.BLUE)){
+					System.out.println("something");
+					g.setColor(m);
+					s[j][i].setC(m);
+					if (count++>endgamecount)return;
+					
+				g.fillRect(squareWidth*i, squareHeight*j, squareWidth, squareHeight);
+				g.setColor(Color.BLACK);
+				g.drawRect(squareWidth*i, squareHeight*j, squareWidth, squareHeight);			
+				}else{
+					System.out.println("notsomething");
+				}
+			}
+		}
+		
+		Pentomino p = board2.getLivingPentomino();
+		if (p==null) return;
+		Square[] ps= p.getSquares();
+		
+		for (int i = 0; i<ps.length;i++){
+			g.setColor(ps[i].getC());
+			g.fillRect(squareWidth*ps[i].getX(), squareHeight*ps[i].getY(), squareWidth, squareHeight);
+			g.setColor(Color.BLACK);
+			g.drawRect(squareWidth*ps[i].getX(), squareHeight*ps[i].getY(), squareWidth, squareHeight);	
+		}
+		
+		
 	}
 
 	public void setData(Board b) {

@@ -44,7 +44,11 @@ public void start() {
 			b.moveLivingPentominoOneTick();
 			if (Collision()){
 				b.moveLivingPentomino(-1,0);
-				b.setLivingPentominoDown();
+				b.setLivingPentominoDown(); //if endgame aktivates, it maybe removes full lines
+				if (b.isEndgame()) {
+					t1.stop();
+					t2.stop();
+				}
 				b.removeFullLines(b.checkForFullLines());
 			}
 			d.refresh();
@@ -69,7 +73,7 @@ protected void setC(Control c) {
 }
 private void createStandartConfigurationInterface() {
 	CI = new ConfigurationInterface() {
-		int sc = 1000/50;
+		int sc = 800/50;
 		int ss = 1000/10;
 		public int getSpeedOfControl() {
 			return sc;

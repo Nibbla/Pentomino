@@ -106,6 +106,7 @@ import Pentomino.Interfaces.PentominoInterface;
 		protected Square[] lb3= {Square(-3,0),Square(-2,0),Square(-1,0),Square(0,0),Square(0,-1)};
 		ArrayList<Square[]> pentomino= loadPentominosIntoArray();//new ArrayList<Square[]>();
 		ArrayList<String> pentominoNames= loadPentominosNamesIntoArray();
+		private Random r;
 		
 		
 		public Square Square(int j, int k) {
@@ -118,11 +119,12 @@ import Pentomino.Interfaces.PentominoInterface;
 			loadPentominosIntoArray();
 			Random r = new Random();
 			index = r.nextInt(pentomino.size());
+			getIndexOfPentomino("xa1",false);
+				
 			
-				//f = this.getClass().getField("la1");
-			for (int x = 0; x< pentominoNames.size();x++) {
-				if (pentominoNames.get(x).equals("ta1")) index = x;
-			}
+			
+				
+			
 			this.name = pentominoNames.get(index);
 			System.out.println(name);
 			boolean rainbow = false;
@@ -144,6 +146,20 @@ import Pentomino.Interfaces.PentominoInterface;
 		
 
 	
+
+		private int getIndexOfPentomino(String string, boolean spellcheck) {
+			int index = -1;
+			//if (name.length()>3)throw new java.lang.Exception(name + "bigger then" + 3);
+			for (int x = 0; x< pentominoNames.size();x++) {
+				if (pentominoNames.get(x).equals(name)) index = x;
+			}
+			
+			//if (index == -1) throw new  java.lang.Exception(name + "not found");
+			return index;
+			
+		}
+
+		
 
 		private Square[] copyPentomino(
 				Square[] squares) {
@@ -391,7 +407,11 @@ import Pentomino.Interfaces.PentominoInterface;
 			
 		}
 
-	public boolean below(int line) {
+	/**
+	 * @param line
+	 * @return true if the pentomino is complete underneath that line
+	 */
+	public boolean completlyBelow(int line) {
 			
 			int count = 0;
 			for (Square s : squares) {
@@ -400,6 +420,108 @@ import Pentomino.Interfaces.PentominoInterface;
 			}
 			if (count == squares.size())return true;
 			return false;
+		
+		
+	}
+	
+	
+	/**
+	 * @param line
+	 * @return return true if pentomino is complete above this line
+	 */
+	public boolean completlyAbove(int line) {
+		
+		int count = 0;
+		for (Square s : squares) {
+			if (s.getY()<line)count++;
+			
+		}
+		if (count == squares.size())return true;
+		return false;
+	}
+	/**
+	 * @param line
+	 * @return return true if pentomino is complete to the right of this row
+	 */
+	public boolean completlyRight(int column) {
+		int count = 0;
+		for (Square s : squares) {
+			if (s.getX()>column)count++;
+			
+		}
+		if (count == squares.size())return true;
+		return false;
+		
+	}
+	/**
+	 * @param line
+	 * @return return true if pentomino is complete to the left of this line
+	 */
+	public boolean completlyLeft(int column) {
+		int count = 0;
+		for (Square s : squares) {
+			if (s.getX()<column)count++;
+			
+		}
+		if (count == squares.size())return true;
+		return false;
+		
+	}
+	
+	 /** @param line
+	 * @return true if the pentomino is somewhere underneath that line
+	 */
+	public boolean below(int line) {
+			
+			
+			for (Square s : squares) {
+				if (s.getY()>line)return true;
+				
+			}
+		
+			return false;
+		
+		
+	}
+	
+	
+	/**
+	 * @param line
+	 * @return return true if pentomino is complete above this line
+	 */
+	public boolean above(int line) {
+		
+
+		for (Square s : squares) {
+			if (s.getY()<line)return true;
+			
 		}
 		
+		return false;
+	}
+	/**
+	 * @param line
+	 * @return return true if pentomino is complete to the right of this row
+	 */
+	public boolean right(int column) {
+		
+		for (Square s : squares) {
+			if (s.getX()>column)return true;
+			
+		}
+		return false;
+		
+	}
+	/**
+	 * @param line
+	 * @return return true if pentomino is complete to the left of this line
+	 */
+	public boolean left(int column) {
+		for (Square s : squares) {
+			if (s.getX()<column)return true;
+			
+		}
+		return false;
+}
+	
 	}

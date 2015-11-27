@@ -12,6 +12,11 @@ public class Board {
 	Pentomino livingPentomino;
 	Pentomino shadowPentomino;
 	private boolean rotatePressed;
+	private boolean endgame;
+	protected boolean isEndgame() {
+		return endgame;
+	}
+
 	public Board(int gameWidth, int gameHeight){
 		board = new Square[gameHeight][gameWidth];
 		shadowBoard = new Square[gameHeight][gameWidth];
@@ -61,7 +66,11 @@ public class Board {
 	}
 	public void setLivingPentominoDown(){
 		if (livingPentomino==null)return;
-		if (!livingPentomino.below(-1)){System.out.println("endgame");}
+		if (!livingPentomino.above(0)){
+			System.out.println("endgame");
+			this.endgame = true;
+			return;
+		}
 		Square[] s = livingPentomino.getSquares();
 		for (int i= 0;i<s.length;i++){
 			Square ss = s[i];//singlesquare
@@ -80,7 +89,7 @@ public class Board {
 		
 		livingPentomino.moveY(1);
 		
-		if (livingPentomino.below(board.length)) {
+		if (livingPentomino.completlyBelow(board.length)) {
 			livingPentomino = new Pentomino();
 			livingPentomino.moveX(board[1].length/2);
 			livingPentomino.moveY(-2);
