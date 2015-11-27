@@ -28,10 +28,11 @@ public class Game implements TetrisGame{
 			CI=this.CI;
 		}else{this.CI=CI;}
 	   b = new Board(CI.getBoardWidth(), CI.GetBoardHeight());
-	   b.board[0][2].setC(Color.CYAN);
+	   b.board[4][4].setC(Color.CYAN);
+	   /*
 	   b.board[4][11].setC(Color.green);
 	   b.board[0][4].setC(Color.BLUE);
-	   b.board[2][2].setC(Color.RED);
+	   b.board[2][2].setC(Color.RED);*/
 	   d.setData(b);
    }
 
@@ -57,8 +58,21 @@ public void start() {
 	 t2 = new javax.swing.Timer(CI.getSpeedOfControl(), new ActionListener() {	
 		public void actionPerformed(ActionEvent e) {
 			MoveControl(c);
-			if (Collision()){
+			while(Collision()){
 				b.moveLivingPentomino(c,true);
+				/*if (b.livingPentomino.right(b.board[0].length)){
+					b.moveLivingPentomino(0,-1);
+				}
+				if (b.livingPentomino.left(0)){
+					b.moveLivingPentomino(0,1);
+				}
+				if (b.livingPentomino.below(b.board.length)){
+					b.moveLivingPentomino(-1,0);
+				}
+				if (b.livingPentomino.above(0)){
+					b.moveLivingPentomino(1,0);
+				}*/
+				
 			}
 			d.refresh();
 		}
@@ -97,12 +111,12 @@ private void createStandartConfigurationInterface() {
 
 		public int getBoardWidth() {
 			
-			return 12;
+			return 5;
 		}
 
 		public int GetBoardHeight() {
 			
-			return 36;
+			return 15;
 		}
 	};
 	
@@ -127,7 +141,7 @@ public boolean Collision() {
 		if (y>=ss.length)return true;
 		if (x<0) return true;
 		if (x>=ss[0].length)return true;
-		if(!ss[s.getY()][s.getX()].getC().equals(Color.BLUE)){
+		if(!ss[s.getY()][s.getX()].getC().equals(Color.GRAY)){
 			return true;
 		}
 		

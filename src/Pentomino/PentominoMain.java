@@ -18,13 +18,14 @@ import Pentomino.Interfaces.TetrisGame;
 
 public class PentominoMain extends Canvas implements Runnable,Display{
 	
-	protected static final int WIDTH=400, HEIGHT=565;
-	protected static  int WIDTHf=400, HEIGHTf=565;
+	protected static final int WIDTH=250, HEIGHT=750;
+	
 	protected TetrisGame game;
 	private Controller controller;
 	private Board board;
 	private int endgamecount;
 	private Timer timerEndgame;
+	private boolean endGame2;
 	private static PentominoMain pm ;
 	
 	public static void main(String[] args){
@@ -108,8 +109,7 @@ public class PentominoMain extends Canvas implements Runnable,Display{
 		
 		
 		pm.setBounds(0, 25, WIDTH, HEIGHT-25);
-		WIDTHf=pm.getWidth();
-		HEIGHTf=pm.getHeight();
+		
 		frame.add(pm);
 		bar.add(file);
 		file.add(newGame);
@@ -130,11 +130,13 @@ public class PentominoMain extends Canvas implements Runnable,Display{
 	protected static void startNewGame(final PentominoMain pm) {
 		pm.game = new Game((Control)pm.controller, (Display)pm, null);
 		pm.endgamecount=0;
+		pm.endGame2 = false;
 		if (pm.timerEndgame != null) pm.timerEndgame.stop();
-		pm.timerEndgame = new Timer(6000, new ActionListener() {
+		pm.timerEndgame = new Timer(1000/60, new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e) {
 				pm.endgamecount++;
+				//System.out.println(pm.endgamecount);
 				
 			}
 		});
@@ -234,23 +236,43 @@ public class PentominoMain extends Canvas implements Runnable,Display{
 
 		int squareWidth = width2/sW; 
 		int squareHeight = height2/sH;
-		
+		int squares = s.length*s[0].length;
 		
 		for (int j = sH-1; j >=0;j--){
 			for (int i = sW-1; i>=0;i--){
-				
+				count++;
 				Color m = ColorE.colorM();
-				if (s[j][i].getC().equals(Color.BLUE)){
-					System.out.println("something");
-					g.setColor(m);
-					s[j][i].setC(m);
-					if (count++>endgamecount)return;
+				if(endgamecount>squares){
+					endgamecount=0;
+					endGame2=true;
+				}
+				if(endGame2!=true){
+				if (s[j][i].getC().equals(Color.GRAY)){
+					//System.out.println("something");
 					
-				g.fillRect(squareWidth*i, squareHeight*j, squareWidth, squareHeight);
+					if (count++<endgamecount){
+						s[j][i].setC(m);
+						return;
+					}
+					
+					//g.setColor(m);
+					
+				/*g.fillRect(squareWidth*i, squareHeight*j, squareWidth, squareHeight);
 				g.setColor(Color.BLACK);
-				g.drawRect(squareWidth*i, squareHeight*j, squareWidth, squareHeight);			
+				g.drawRect(squareWidth*i, squareHeight*j, squareWidth, squareHeight);		*/	
 				}else{
-					System.out.println("notsomething");
+					//System.out.println(endgamecount + "notsomething");
+				}
+				
+				}else{
+					if (!s[j][i].getC().equals(Color.GRAY)){
+						//System.out.println("engame2");
+						
+						if (count++<endgamecount){
+							s[j][i].setC(Color.GRAY);
+							return;
+						}
+					}
 				}
 			}
 		}
@@ -258,12 +280,17 @@ public class PentominoMain extends Canvas implements Runnable,Display{
 		Pentomino p = board2.getLivingPentomino();
 		if (p==null) return;
 		Square[] ps= p.getSquares();
-		
+		if (endGame2){
+			
+			 //board2.livingPentomino=null;
+			
+		}else{
 		for (int i = 0; i<ps.length;i++){
 			g.setColor(ps[i].getC());
 			g.fillRect(squareWidth*ps[i].getX(), squareHeight*ps[i].getY(), squareWidth, squareHeight);
 			g.setColor(Color.BLACK);
 			g.drawRect(squareWidth*ps[i].getX(), squareHeight*ps[i].getY(), squareWidth, squareHeight);	
+		}
 		}
 		
 		

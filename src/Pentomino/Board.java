@@ -33,7 +33,7 @@ public class Board {
 		for (int i = 0;i<board.length;i++){
 			int count = 0;
 			for (int j = 0;j<board[1].length;j++){
-				if (board[i][j].getC().getRGB()!=Color.BLUE.getRGB())count++;
+				if (board[i][j].getC().getRGB()!=Color.GRAY.getRGB())count++;
 			}
 			if (count == board[1].length){
 				fullLines.add(i);
@@ -65,8 +65,9 @@ public class Board {
 		return livingPentomino;
 	}
 	public void setLivingPentominoDown(){
+		System.out.println("puff");
 		if (livingPentomino==null)return;
-		if (!livingPentomino.above(0)){
+		if (livingPentomino.above(0)){
 			System.out.println("endgame");
 			this.endgame = true;
 			return;

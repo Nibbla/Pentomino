@@ -391,6 +391,8 @@ import Pentomino.Interfaces.PentominoInterface;
 			
 			this.index = goalIndex;
 			this.name = pentominoNames.get(goalIndex);
+			
+			
 		}
 		
 		public void moveX(int j) {
@@ -506,7 +508,7 @@ import Pentomino.Interfaces.PentominoInterface;
 	public boolean right(int column) {
 		
 		for (Square s : squares) {
-			if (s.getX()>column)return true;
+			if (s.getX()>=column)return true;
 			
 		}
 		return false;
@@ -518,7 +520,7 @@ import Pentomino.Interfaces.PentominoInterface;
 	 */
 	public boolean left(int column) {
 		for (Square s : squares) {
-			if (s.getX()<column)return true;
+			if (s.getX()<=column)return true;
 			
 		}
 		return false;

@@ -13,7 +13,7 @@ public class Square implements Cloneable{
 		this.c=c;
 	}*/
 	public Square(int x, int y){
-		c = Color.BLUE;
+		c = Color.GRAY;
 		this.x=x;
 		this.y=y;
 	}
