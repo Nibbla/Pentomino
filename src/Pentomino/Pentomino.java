@@ -356,7 +356,7 @@ import Pentomino.Interfaces.PentominoInterface;
 			System.out.println("rotate right" + right);
 			int j = 0;
 			if (right) j++;else j--;
-			if (index+j>pentomino.size()) j-=4; //out of bounds
+			if (index+j>pentomino.size()-1) j-=4; //out of bounds
 			if (index+j<0) j+=4; //out of bounds
 			//findGoalPentomino
 			String currentPentomino = name.substring(0, 2);
@@ -503,12 +503,12 @@ import Pentomino.Interfaces.PentominoInterface;
 	}
 	/**
 	 * @param line
-	 * @return return true if pentomino is complete to the right of this row
+	 * @return return true if pentomino is complete to the right of this collumn
 	 */
 	public boolean right(int column) {
 		
 		for (Square s : squares) {
-			if (s.getX()>=column)return true;
+			if (s.getX()>column)return true;
 			
 		}
 		return false;
@@ -520,7 +520,7 @@ import Pentomino.Interfaces.PentominoInterface;
 	 */
 	public boolean left(int column) {
 		for (Square s : squares) {
-			if (s.getX()<=column)return true;
+			if (s.getX()<column)return true;
 			
 		}
 		return false;

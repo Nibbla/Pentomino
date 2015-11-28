@@ -82,18 +82,22 @@ public class Board {
 	public void moveLivingPentominoOneTick(){
 		if (livingPentomino==null) {
 			livingPentomino = new Pentomino();
-			System.out.println(board[1].length/2);
 			livingPentomino.moveX(board[1].length/2);
-			livingPentomino.moveY(-2);
+			while(livingPentomino.right(board[1].length-1))livingPentomino.moveX(-1);
+			while(livingPentomino.left(0))livingPentomino.moveX(1);
+			livingPentomino.moveY(-1);
 			return;
 		}
-		
+		while(livingPentomino.right(board[1].length-1))livingPentomino.moveX(-1);
+		while(livingPentomino.left(0))livingPentomino.moveX(1);
 		livingPentomino.moveY(1);
 		
 		if (livingPentomino.completlyBelow(board.length)) {
 			livingPentomino = new Pentomino();
 			livingPentomino.moveX(board[1].length/2);
-			livingPentomino.moveY(-2);
+			while(livingPentomino.right(board[1].length))livingPentomino.moveX(-1);
+			while(livingPentomino.left(0))livingPentomino.moveX(1);
+			livingPentomino.moveY(-1);
 			return;
 		}
 	}
@@ -101,35 +105,39 @@ public class Board {
 		if (livingPentomino==null)return;
 		
 			if (c.isButtonPressed(Control.Buttons.RotateRight) && !rotatePressed){
+				
 				livingPentomino.rotate(true^reverseXY);
+				
 				rotatePressed=true;
+				if(isCollision()){
+					livingPentomino.rotate(false^reverseXY);
+					rotatePressed=false;
+				}
 			}
 			if (c.isButtonPressed(Control.Buttons.RotateLeft)  && !rotatePressed){
 				livingPentomino.rotate(false^reverseXY);
 				rotatePressed=true;
+				if(isCollision()){
+					livingPentomino.rotate(true^reverseXY);
+					rotatePressed=false;
+				}
 			}
 			if (!c.isButtonPressed(Control.Buttons.RotateLeft) && !c.isButtonPressed(Control.Buttons.RotateRight)) rotatePressed=false;
 		if (!reverseXY){
 		
 		if (c.isButtonPressed(Control.Buttons.Left) ){
 			livingPentomino.moveX(-1);
+			if(isCollision()){livingPentomino.moveX(1);}
+			
 		}
 		if (c.isButtonPressed(Control.Buttons.Down) ){
 			livingPentomino.moveY(1);
+			if(isCollision()){livingPentomino.moveY(-1);}
 		}
 		if (c.isButtonPressed(Control.Buttons.Right) ){
 			livingPentomino.moveX(1);
-		}}else{
-			if (c.isButtonPressed(Control.Buttons.Left) ){
-				livingPentomino.moveX(1);
-			}
-			if (c.isButtonPressed(Control.Buttons.Down) ){
-				livingPentomino.moveY(-1);
-			}
-			if (c.isButtonPressed(Control.Buttons.Right) ){
-				livingPentomino.moveX(-1);
-			}
-		}
+			if(isCollision()){livingPentomino.moveX(-1);}
+		}}
 		
 		
 		
@@ -164,6 +172,25 @@ public class Board {
 	public void setFullBoard(Square[][] extracted) {
 		board = extracted;
 		
+	}
+
+	public boolean isCollision() {
+		Pentomino p = getLivingPentomino();
+		if (p==null)return false;
+		for (Square s : p.getSquares()) {
+			Square[][] ss =board;
+			int y =s.getY();
+			int x =s.getX();
+			if (y<0)continue;
+			if (y>=ss.length)return true;
+			if (x<0) return true;
+			if (x>=ss[0].length)return true;
+			if(!ss[s.getY()][s.getX()].getC().equals(Color.GRAY)){
+				return true;
+			}
+			
+		}
+		return false;
 	}
 	
 	

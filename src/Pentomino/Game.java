@@ -28,7 +28,7 @@ public class Game implements TetrisGame{
 			CI=this.CI;
 		}else{this.CI=CI;}
 	   b = new Board(CI.getBoardWidth(), CI.GetBoardHeight());
-	   b.board[4][4].setC(Color.CYAN);
+	   //b.board[4][4].setC(Color.CYAN);
 	   /*
 	   b.board[4][11].setC(Color.green);
 	   b.board[0][4].setC(Color.BLUE);
@@ -58,22 +58,7 @@ public void start() {
 	 t2 = new javax.swing.Timer(CI.getSpeedOfControl(), new ActionListener() {	
 		public void actionPerformed(ActionEvent e) {
 			MoveControl(c);
-			while(Collision()){
-				b.moveLivingPentomino(c,true);
-				/*if (b.livingPentomino.right(b.board[0].length)){
-					b.moveLivingPentomino(0,-1);
-				}
-				if (b.livingPentomino.left(0)){
-					b.moveLivingPentomino(0,1);
-				}
-				if (b.livingPentomino.below(b.board.length)){
-					b.moveLivingPentomino(-1,0);
-				}
-				if (b.livingPentomino.above(0)){
-					b.moveLivingPentomino(1,0);
-				}*/
-				
-			}
+			
 			d.refresh();
 		}
 	});
@@ -88,7 +73,7 @@ protected void setC(Control c) {
 private void createStandartConfigurationInterface() {
 	CI = new ConfigurationInterface() {
 		int sc = 800/50;
-		int ss = 1000/10;
+		int ss = 1000/1;
 		public int getSpeedOfControl() {
 			return sc;
 		}
@@ -131,22 +116,8 @@ public void MoveTime() {
 	
 }
 public boolean Collision() {
-	Pentomino p = b.getLivingPentomino();
-	if (p==null)return false;
-	for (Square s : p.getSquares()) {
-		Square[][] ss =b.board;
-		int y =s.getY();
-		int x =s.getX();
-		if (y<0)continue;
-		if (y>=ss.length)return true;
-		if (x<0) return true;
-		if (x>=ss[0].length)return true;
-		if(!ss[s.getY()][s.getX()].getC().equals(Color.GRAY)){
-			return true;
-		}
-		
-	}
-	return false;
+	return b.isCollision();
+	
 }
 public boolean PlacePiece() {
 	// TODO Auto-generated method stub
