@@ -19,6 +19,8 @@ public class Game implements TetrisGame{
 	ConfigurationInterface CI;
 	private Timer t1;
 	private Timer t2;
+
+	private int points;
    public Game(Control c, Display d,ConfigurationInterface CI){
 	   this.c = c;
 	   this.d = d;
@@ -37,7 +39,7 @@ public class Game implements TetrisGame{
    }
 
 public void start() {
-	
+	points = 0;
 	t1 = new javax.swing.Timer(CI.getSpeedOfStep(), new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
 			System.out.println("tick");
@@ -50,7 +52,7 @@ public void start() {
 					t1.stop();
 					t2.stop();
 				}
-				b.removeFullLines(b.checkForFullLines());
+				points +=b.removeFullLines(b.checkForFullLines());
 			}
 			d.refresh();
 		}

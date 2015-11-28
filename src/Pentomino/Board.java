@@ -41,7 +41,8 @@ public class Board {
 		}
 		return fullLines;
 	}
-	public void removeFullLines(ArrayList<Integer> fullLines){
+	public int removeFullLines(ArrayList<Integer> fullLines){
+		int lines = fullLines.size()*fullLines.size();
 		for (Integer line : fullLines) {
 			for (int x=0;x<board[line].length;x++){
 				if (line==0)board[line][x] = new Square(board[line][x].getX(),board[line][x].getY());
@@ -56,6 +57,7 @@ public class Board {
 				
 			}
 		}
+		return lines*lines;
 		
 	}
 	public Square[][] getFullBoard(){
