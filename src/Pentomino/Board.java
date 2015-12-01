@@ -41,7 +41,7 @@ public class Board {
 		}
 		return fullLines;
 	}
-	public int removeFullLines(ArrayList<Integer> fullLines){
+	public int removeFullLinesAndReturnNumberOfPoints(ArrayList<Integer> fullLines){
 		int lines = fullLines.size()*fullLines.size();
 		for (Integer line : fullLines) {
 			for (int x=0;x<board[line].length;x++){

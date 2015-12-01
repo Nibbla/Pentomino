@@ -11,6 +11,12 @@ import Pentomino.Interfaces.Control;
 import Pentomino.Interfaces.Display;
 import Pentomino.Interfaces.TetrisGame;
 
+/** The Gameclass represents a running game.
+ *  It combines a Control, a Display, and the Gamerules.
+ *  
+ * @author Nibbla
+ *
+ */
 public class Game implements TetrisGame{
 	Control c;
 	
@@ -21,6 +27,7 @@ public class Game implements TetrisGame{
 	private Timer t2;
 
 	private int points;
+	
    public Game(Control c, Display d,ConfigurationInterface CI){
 	   this.c = c;
 	   this.d = d;
@@ -30,14 +37,13 @@ public class Game implements TetrisGame{
 			CI=this.CI;
 		}else{this.CI=CI;}
 	   b = new Board(CI.getBoardWidth(), CI.GetBoardHeight());
-	   //b.board[4][4].setC(Color.CYAN);
-	   /*
-	   b.board[4][11].setC(Color.green);
-	   b.board[0][4].setC(Color.BLUE);
-	   b.board[2][2].setC(Color.RED);*/
+	  
 	   d.setData(b);
    }
 
+/* (non-Javadoc)
+ * @see Pentomino.Interfaces.TetrisGame#start()
+ */
 public void start() {
 	points = 0;
 	t1 = new javax.swing.Timer(CI.getSpeedOfStep(), new ActionListener() {
@@ -52,7 +58,7 @@ public void start() {
 					t1.stop();
 					t2.stop();
 				}
-				points +=b.removeFullLines(b.checkForFullLines());
+				points +=b.removeFullLinesAndReturnNumberOfPoints(b.checkForFullLines());
 			}
 			d.refresh();
 		}
@@ -74,7 +80,7 @@ protected void setC(Control c) {
 }
 private void createStandartConfigurationInterface() {
 	CI = new ConfigurationInterface() {
-		int sc = 800/50;
+		int sc = 800/20;
 		int ss = 1000/1;
 		public int getSpeedOfControl() {
 			return sc;

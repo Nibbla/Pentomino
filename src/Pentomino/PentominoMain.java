@@ -127,7 +127,7 @@ public class PentominoMain extends Canvas implements Runnable,Display{
 	 * @param pm 
 	 * 
 	 */
-	protected static void startNewGame(final PentominoMain pm) {
+	public static void startNewGame(final PentominoMain pm) {
 		pm.game = new Game((Control)pm.controller, (Display)pm, null);
 		pm.endgamecount=0;
 		pm.endGame2 = false;
