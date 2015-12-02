@@ -1,0 +1,387 @@
+package Pentomino;
+
+import java.awt.BorderLayout;
+import java.awt.Canvas;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics2D;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.image.BufferStrategy;
+import javax.swing.*;
+
+
+import Pentomino.Interfaces.Control;
+import Pentomino.Interfaces.Display;
+import Pentomino.Interfaces.TetrisGame;
+
+public class PentominoMain extends Canvas implements Runnable,Display{
+	
+	protected static final int WIDTH=500, HEIGHT=750;
+	
+	protected TetrisGame game;
+	private Controller controller;
+	private static Board board;
+	private int endgamecount;
+	private Timer timerEndgame;
+	private boolean endGame2;
+	private static PentominoMain pm ;
+	
+	static JLabel scoreLabel2 = new JLabel();
+
+	
+	public static void main(String[] args){
+		
+		pm = new PentominoMain();
+		pm.controller = new Controller();
+		final JFrame frame = new JFrame("Pentomino");
+		
+		frame.setSize(WIDTH,HEIGHT);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setLocationRelativeTo(null);
+		frame.setResizable(false);
+		frame.setLayout(new BorderLayout());
+		
+		KeyGetter.loadKeys();
+		try {
+			Configuration.loadConfig();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		JMenuBar bar = new JMenuBar();
+		bar.setBounds(0, 0, WIDTH, 25);
+		
+		JMenu file = new JMenu("File");
+		file.setBounds(0,0,45,24);
+		
+		JMenuItem newGame = new JMenuItem("New Game");
+		
+		newGame.addActionListener(new ActionListener(){
+			
+			public void actionPerformed(ActionEvent e){
+				startNewGame(pm);
+				System.out.println("Starting New Game...");
+			}
+		});
+		
+		JMenuItem highScore = new JMenuItem("High Score");
+		highScore.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				
+				
+				final JFrame alert = new JFrame("High Score");
+				alert.setSize(500, 400);
+				alert.setLayout(null);
+				alert.setLocationRelativeTo(null);
+				alert.setAlwaysOnTop(true);
+				
+				/*JLabel score = new JLabel();
+				String scoreText = "The high scores are: \n" + board.score.getName1() + ":   " + board.score.getScore1();
+				scoreText += "\n" + board.score.getName2() + ":   " + board.score.getScore2();
+				scoreText += "\n" + board.score.getName3() + ":   " + board.score.getScore3();
+				scoreText += "\n" + board.score.getName4() + ":   " + board.score.getScore4();
+				scoreText += "\n" + board.score.getName5() + ":   " + board.score.getScore5();
+				score.setBounds(0,0,100,300);
+				score.setText(scoreText);
+				*/
+				
+				alert.setLayout(new GridLayout(7,1));
+				
+				
+				
+				
+				JLabel label1 = new JLabel("The high scores are: \n" );
+				label1.setBounds(50, 0, 100, 25);
+				alert.add(label1);
+				
+				alert.add(new JLabel(board.score.getName1() + ":   " + board.score.getScore1()));//.setBounds(0, 25, 100, 25));
+				alert.add(new JLabel(board.score.getName2() + ":   " + board.score.getScore2()));//.setBounds(0, 50, 100, 25));
+				alert.add(new JLabel(board.score.getName3() + ":   " + board.score.getScore3()));//.setBounds(0, 75, 100, 25));
+				alert.add(new JLabel(board.score.getName4() + ":   " + board.score.getScore4()));//.setBounds(0, 100, 100, 25));
+				alert.add(new JLabel(board.score.getName5() + ":   " + board.score.getScore5()));//.setBounds(0, 125, 100, 25));
+				
+				JButton okayButton = new JButton("Okay");
+				okayButton.setBounds(50, 120, 100, 30);
+				okayButton.addActionListener(new ActionListener(){
+					public void actionPerformed(ActionEvent e){
+						alert.dispose();
+					}
+				});
+				
+				//alert.add(score);
+				
+				alert.add(okayButton);
+				alert.setResizable(false);
+				alert.setVisible(true);
+			}			
+		});
+		
+		JMenuItem exit = new JMenuItem("Exit");
+		exit.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				System.out.println("Closing...");
+				System.exit(0);
+			}
+		});
+		
+		JMenuItem options = new JMenuItem("Options");
+		options.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				Configuration.openConfig(frame);
+			}
+		});
+		
+		JPanel panel = new JPanel();
+		panel.setBounds(250, 0, 250, 750);
+		panel.setLayout(new GridLayout(3,1));
+		
+		JLabel scoreLabel = new JLabel();
+		scoreLabel.setText("                            Your score is:                     " );
+		
+		
+		JPanel smallPanel = new JPanel();
+		smallPanel.setLayout(new GridLayout(2,1));
+		smallPanel.add(scoreLabel);
+		smallPanel.add(scoreLabel2);
+		panel.add(smallPanel);
+		
+		pm.setBounds(0, 25, WIDTH, HEIGHT-25);
+		
+		frame.add(pm, BorderLayout.CENTER);
+		frame.add(panel, BorderLayout.EAST);
+		bar.add(file);
+		file.add(newGame);
+		file.add(highScore);
+		file.add(options);
+		file.add(exit);
+		frame.add(bar, BorderLayout.NORTH);
+		frame.setVisible(true);
+		
+		
+
+		pm.start();
+		// scoreLabel2.setText("                    "+board.getcurrentScore());
+		
+	}
+	
+	/**This methods is executed after the users klings on start a new game
+	 * @param pm 
+	 * 
+	 */
+	protected static void startNewGame(final PentominoMain pm) {
+		pm.game = new Game((Control)pm.controller, (Display)pm, null);
+		pm.endgamecount=0;
+		pm.endGame2 = false;
+		if (pm.timerEndgame != null) pm.timerEndgame.stop();
+		pm.timerEndgame = new Timer(1000/60, new ActionListener() {
+			
+			public void actionPerformed(ActionEvent e) {
+				pm.endgamecount++;
+				//System.out.println(pm.endgamecount);
+				
+			}
+		});
+		pm.game.start();
+	}
+
+	public void start() {
+		Thread t = new Thread(this);
+		t.setPriority(Thread.MAX_PRIORITY);
+		t.start();
+	}
+
+	public void run(){
+		boolean running = true;
+		initialize();
+		while( running ){
+			update();
+			BufferStrategy buf = getBufferStrategy();
+			if (buf == null){
+				createBufferStrategy(3);
+				continue;
+			}
+			Graphics2D g = (Graphics2D) buf.getDrawGraphics();
+			render(g);
+			buf.show();
+		}
+	}
+	
+	public void update(){
+		
+	}
+	
+	public void initialize(){
+		
+		this.addKeyListener(controller);
+		requestFocus();
+		
+	}
+	
+	public void render(Graphics2D g){
+	if (board==null){
+		g.setColor(Color.MAGENTA);
+		g.fillRect(0, 0, WIDTH, HEIGHT);
+		g.setColor(Color.WHITE);
+		g.setFont(new Font("Calibri", Font.PLAIN, 20));
+		g.drawString("Pentomino", 140, 50);
+		}else{
+		drawBoard(g,WIDTH,HEIGHT-25,board);
+		}
+	}
+
+	private void drawBoard(Graphics2D g, int width2, int height2, Board board2) {
+		g.setColor(Color.lightGray);
+		g.fillRect(0, 0, width2, height2);
+		width2 = pm.getWidth();
+		height2 = pm.getHeight()-30;
+		if (board2==null)return;
+		Square[][] s = board2.getFullBoard();
+		
+		int sH = s.length;
+		int sW = s[0].length;
+		int squareWidth = width2/sW; 
+		int squareHeight = height2/sH;
+		
+		for (int i = 0; i<sW;i++){
+			for (int j = 0; j <sH;j++){
+				g.setColor(s[j][i].getC());
+				g.fillRect(squareWidth*i, squareHeight*j, squareWidth, squareHeight);
+				g.setColor(Color.BLACK);
+				g.drawRect(squareWidth*i, squareHeight*j, squareWidth, squareHeight);				
+			}
+		}
+		
+		Pentomino p = board2.getLivingPentomino();
+		if (p==null) return;
+		Square[] ps= p.getSquares();
+		
+		for (int i = 0; i<ps.length;i++){
+			g.setColor(ps[i].getC());
+			g.fillRect(squareWidth*ps[i].getX(), squareHeight*ps[i].getY(), squareWidth, squareHeight);
+			g.setColor(Color.BLACK);
+			g.drawRect(squareWidth*ps[i].getX(), squareHeight*ps[i].getY(), squareWidth, squareHeight);	
+		}
+		if (board2.isEndgame()){
+			
+			timerEndgame.start();
+			drawEndgame(g, width2, height2, board2);
+		}
+	}
+
+	private void drawEndgame(Graphics2D g, int width2, int height2, Board board2) {
+		Square[][] s = board2.getFullBoard();
+		int count = 0;
+		
+		int sH = s.length;
+		int sW = s[0].length;
+
+		int squareWidth = width2/sW; 
+		int squareHeight = height2/sH;
+		int squares = s.length*s[0].length;
+		
+		for (int j = sH-1; j >=0;j--){
+			for (int i = sW-1; i>=0;i--){
+				count++;
+				Color m = ColorE.colorM();
+				if(endgamecount>squares){
+					endgamecount=0;
+					endGame2=true;
+				}
+				if(endGame2!=true){
+				if (s[j][i].getC().equals(Color.GRAY)){
+					//System.out.println("something");
+					
+					if (count++<endgamecount){
+						s[j][i].setC(m);
+						return;
+					}
+					
+					//g.setColor(m);
+					
+				/*g.fillRect(squareWidth*i, squareHeight*j, squareWidth, squareHeight);
+				g.setColor(Color.BLACK);
+				g.drawRect(squareWidth*i, squareHeight*j, squareWidth, squareHeight);		*/	
+				}else{
+					//System.out.println(endgamecount + "notsomething");
+				}
+				
+				}else{
+					if (!s[j][i].getC().equals(Color.GRAY)){
+						//System.out.println("engame2");
+						
+						if (count++<endgamecount){
+							s[j][i].setC(Color.GRAY);
+							return;
+						}
+					}
+				}
+			}
+		}
+		
+		Pentomino p = board2.getLivingPentomino();
+		if (p==null) return;
+		Square[] ps= p.getSquares();
+		if (endGame2){
+			
+			 //board2.livingPentomino=null;
+			
+		}else{
+		for (int i = 0; i<ps.length;i++){
+			g.setColor(ps[i].getC());
+			g.fillRect(squareWidth*ps[i].getX(), squareHeight*ps[i].getY(), squareWidth, squareHeight);
+			g.setColor(Color.BLACK);
+			g.drawRect(squareWidth*ps[i].getX(), squareHeight*ps[i].getY(), squareWidth, squareHeight);	
+		}
+		}
+		
+		
+	}
+
+	public void setData(Board b) {
+		this.board = b;
+		
+	}
+
+	public void refresh() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public static Display getDisplayInstance() {
+		
+		return pm;
+	}
+	public static PentominoMain getInstance() {
+		
+		return pm;
+	}
+	public void setColorMode(String[] args) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void close() {
+		System.out.println("Closing...");
+		System.exit(0);
+	  
+		
+	}
+
+	public Control getController() {
+		
+		return controller;
+	}
+
+	public Board getBoard() {
+		return this.board;
+		
+	}
+	
+	public TetrisGame getGame() {
+		
+		return game;
+	}
+
+}
