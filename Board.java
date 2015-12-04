@@ -14,7 +14,7 @@ public class Board {
 	private boolean rotatePressed;
 	private boolean endgame;
 	protected int currentScore;
-	protected Highscore score= new Highscore(currentScore);
+	protected Highscore score= new Highscore();
 	
 	
 	protected boolean isEndgame() {
@@ -26,7 +26,7 @@ public class Board {
 
 	public Board(int gameWidth, int gameHeight){
 		board = new Square[gameHeight][gameWidth];
-		score = new Highscore(0);
+		score = new Highscore();
 		shadowBoard = new Square[gameHeight][gameWidth];
 		for (int i = 0; i < board.length; i++) {
 			for (int j = 0; j < board[0].length; j++) {

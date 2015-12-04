@@ -28,7 +28,7 @@ public class PentominoMain extends Canvas implements Runnable,Display{
 	private boolean endGame2;
 	private static PentominoMain pm ;
 	
-	static JLabel scoreLabel2 = new JLabel();
+	protected static JLabel scoreLabel2 = new JLabel();
 
 	
 	public static void main(String[] args){
@@ -96,11 +96,17 @@ public class PentominoMain extends Canvas implements Runnable,Display{
 				label1.setBounds(50, 0, 100, 25);
 				alert.add(label1);
 				
-				alert.add(new JLabel(board.score.getName1() + ":   " + board.score.getScore1()));//.setBounds(0, 25, 100, 25));
-				alert.add(new JLabel(board.score.getName2() + ":   " + board.score.getScore2()));//.setBounds(0, 50, 100, 25));
-				alert.add(new JLabel(board.score.getName3() + ":   " + board.score.getScore3()));//.setBounds(0, 75, 100, 25));
-				alert.add(new JLabel(board.score.getName4() + ":   " + board.score.getScore4()));//.setBounds(0, 100, 100, 25));
-				alert.add(new JLabel(board.score.getName5() + ":   " + board.score.getScore5()));//.setBounds(0, 125, 100, 25));
+				JLabel label2 = new JLabel(board.score.getName1() + ":   " + board.score.getScore1());
+				JLabel label3 = new JLabel(board.score.getName2() + ":   " + board.score.getScore2());
+				JLabel label4 = new JLabel(board.score.getName3() + ":   " + board.score.getScore3());
+				JLabel label5 = new JLabel(board.score.getName4() + ":   " + board.score.getScore4());
+				JLabel label6 = new JLabel(board.score.getName5() + ":   " + board.score.getScore5());
+				
+				alert.add(label2);//.setBounds(0, 25, 100, 25));
+				alert.add(label3);//.setBounds(0, 50, 100, 25));
+				alert.add(label4);//.setBounds(0, 75, 100, 25));
+				alert.add(label5);//.setBounds(0, 100, 100, 25));
+				alert.add(label6);//.setBounds(0, 125, 100, 25));
 				
 				JButton okayButton = new JButton("Okay");
 				okayButton.setBounds(50, 120, 100, 30);

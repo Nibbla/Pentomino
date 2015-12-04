@@ -14,14 +14,16 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
-public class Configuration {
+public class Configuration 
+{
 	
-	protected static String rotate ="Up", left= "Left", right="Right", down="Down", pause="P";
+	protected static String rotate = "Up", left = "Left", right = "Right", down = "Down", pause = "P";
 	private static ArrayList<Choice> choices;
 	
-	public static void openConfig(JFrame frame){
+	public static void openConfig(JFrame frame)
+	{
 		
-		choices= new ArrayList<Choice>();
+		choices = new ArrayList<Choice>();
 		final JFrame options = new JFrame("Options");
 		options.setSize(400,300);
 		options.setResizable(false);
@@ -45,8 +47,10 @@ public class Configuration {
 		
 		JButton done = new JButton("Done");
 		done.setBounds(150, 220, 100, 30);
-		done.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent e){
+		done.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
 				options.dispose();
 				saveChanges();
 			}
@@ -55,8 +59,9 @@ public class Configuration {
 		options.setVisible(true);
 	}
 	
-	public static void saveChanges(){
-		Choice left = choices.get(0) ;
+	public static void saveChanges()
+	{
+		Choice left = choices.get(0);
 		Choice right = choices.get(1);
 		Choice down = choices.get(2);
 		Choice rotate = choices.get(3);
@@ -68,21 +73,26 @@ public class Configuration {
 		Configuration.rotate = rotate.getSelectedItem();
 		Configuration.pause = pause.getSelectedItem();
 		
-		try{
+		try
+		{
 			saveConfig();
-		}catch(Exception e){
+		}
+		catch(Exception e)
+		{
 			e.printStackTrace();
 		}
 		
 	}
 	
-	public static Choice addChoice(String name, JFrame options, int x, int y){
+	public static Choice addChoice(String name, JFrame options, int x, int y)
+	{
 		JLabel label = new JLabel(name);
 		label.setBounds(x, y-20, 100, 20);
-		Choice key= new Choice();
-		for(String s: getKeyNames()){
+		Choice key = new Choice();
+		
+		for(String s: getKeyNames())
 			key.add(s);
-		}
+		
 		key.setBounds(x, y, 100, 20);
 		options.add(key);
 		options.add(label);
@@ -90,25 +100,29 @@ public class Configuration {
 		return key;
 	}
 	
-	public static ArrayList<String>	getKeyNames(){
+	public static ArrayList<String>	getKeyNames()
+	{
 		ArrayList<String> result = new ArrayList<String>();
-		for(String s: KeyGetter.keyNames){
+		for(String s: KeyGetter.keyNames)
+		{
 			result.add(s);
-			if (s.equalsIgnoreCase("F24")){
+			if (s.equalsIgnoreCase("F24"))
 				break;
-			}
+			
 		}
 		return result;
 	}
 	
-	public static void loadConfig() throws Exception{
+	public static void loadConfig() throws Exception
+	{
 		String path = Paths.get(".").toAbsolutePath().normalize().toString();
 		File directory = new File(path, "/Text Files");
-		if (!directory.exists()){
+		if (!directory.exists())
 			directory.mkdirs();
-		}
+		
 		File config = new File(directory, "/config.txt");
-		if (!config.exists()){
+		if (!config.exists())
+		{
 			config.createNewFile();
 			System.out.println("File not found, saving defaults");
 			saveConfig();
@@ -117,30 +131,38 @@ public class Configuration {
 		Scanner s = new Scanner(config);
 		HashMap<String, String> values = new HashMap<String, String>();
 		
-		while(s.hasNextLine()){
+		while(s.hasNextLine())
+		{
 			String[] entry = s.nextLine().split(":");
 			String key = entry[0];
 			String value = entry[1];
 			values.put(key, value);
 		}
-		if(values.size() != 5){
+		if(values.size() != 5)
+		{
 			System.out.println("Config is unnusable, saving defaults");
 			saveConfig();
+			s.close();
 			return;
 		}
-		if(!values.containsKey("left") || !values.containsKey("right") || !values.containsKey("rotate") || !values.containsKey("down") || !values.containsKey("pause")){
+		if(!values.containsKey("left") || !values.containsKey("right") || !values.containsKey("rotate") || !values.containsKey("down") || !values.containsKey("pause"))
+		{
 			System.out.println("Invalid names in config, saving defaults");
 			saveConfig();
+			s.close();
 			return;
 		}
+		
 		String left = values.get("left");
 		String right = values.get("right");
 		String rotate = values.get("rotate");
 		String down = values.get("down");
 		String pause = values.get("pause");
 		
-		if (!(getKeyNames().contains(left) && getKeyNames().contains(right) && getKeyNames().contains(rotate) && getKeyNames().contains(down) && getKeyNames().contains(pause))){
+		if (!(getKeyNames().contains(left) && getKeyNames().contains(right) && getKeyNames().contains(rotate) && getKeyNames().contains(down) && getKeyNames().contains(pause)))
+		{
 			System.out.println("Invalid key in config, saving defaults");
+			s.close();
 			return;
 		}
 		Configuration.left = left;
@@ -149,18 +171,20 @@ public class Configuration {
 		Configuration.down = down;
 		Configuration.pause = pause;
 		
-		
+		s.close();
 	}
 	
-	public static void saveConfig() throws Exception{
+	public static void saveConfig() throws Exception
+	{
 		String path = Paths.get(".").toAbsolutePath().normalize().toString();
 		
 		File directory = new File(path, "/Text Files");
-		if (!directory.exists()){
+		if (!directory.exists())
 			directory.mkdirs();
-		}
+		
 		File config = new File(directory, "/config.txt");
-		if (!config.exists()){
+		if (!config.exists())
+		{
 			config.createNewFile();
 			System.out.println("File not found, saving defaults");
 			saveConfig();
