@@ -23,6 +23,7 @@ public class Game implements TetrisGame
 	
 	public Game(Control c, Display d,ConfigurationInterface CI)
 	{
+		
 	   this.c = c;
 	   this.d = d;
 	  

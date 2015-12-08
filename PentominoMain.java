@@ -61,8 +61,17 @@ public class PentominoMain extends Canvas implements Runnable,Display{
 		newGame.addActionListener(new ActionListener(){
 			
 			public void actionPerformed(ActionEvent e){
-				startNewGame(pm);
+				startNewGame(pm,"normal");
 				System.out.println("Starting New Game...");
+			}
+		});
+		
+		JMenuItem optimalSolution = new JMenuItem("Optimal Solution");
+		
+		optimalSolution.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				startNewGame(pm, "special");
+				System.out.println("Starting optimal solution...");
 			}
 		});
 		
@@ -159,6 +168,7 @@ public class PentominoMain extends Canvas implements Runnable,Display{
 		frame.add(panel, BorderLayout.EAST);
 		bar.add(file);
 		file.add(newGame);
+		file.add(optimalSolution);
 		file.add(highScore);
 		file.add(options);
 		file.add(exit);
@@ -174,10 +184,12 @@ public class PentominoMain extends Canvas implements Runnable,Display{
 	
 	/**This methods is executed after the users klings on start a new game
 	 * @param pm 
+	 * @param spezial 
 	 * 
 	 */
-	protected static void startNewGame(final PentominoMain pm) {
+	protected static void startNewGame(final PentominoMain pm, String special) {
 		pm.game = new Game((Control)pm.controller, (Display)pm, null);
+		//Pentomino.counter=0;
 		pm.endgamecount=0;
 		pm.endGame2 = false;
 		if (pm.timerEndgame != null) pm.timerEndgame.stop();
@@ -189,6 +201,11 @@ public class PentominoMain extends Canvas implements Runnable,Display{
 				
 			}
 		});
+		if (special.equals("special"))
+			Pentomino.special=true;
+		else 
+			Pentomino.special=false;
+		
 		pm.game.start();
 	}
 

@@ -18,6 +18,8 @@ import Pentomino.Interfaces.PentominoInterface;
 	 */
 	public class Pentomino implements PentominoInterface
 	{
+		public static boolean special = false;
+		public static int counter;
 		ArrayList<Square> squares = new ArrayList<Square>();
 		String name = "";
 		int index = 0;
@@ -115,18 +117,28 @@ import Pentomino.Interfaces.PentominoInterface;
 		}
 		
 		public Pentomino() {
+			if (special){
 			//TODO modify the constructor that a random pentomino gets choosen. Depending on the chosen pentomino, a different color should be used
-			loadPentominosIntoArray();
-			Random r = new Random();
-			index = r.nextInt(pentomino.size());
-			getIndexOfPentomino("xa1",false);
-							
-			this.name = pentominoNames.get(index);
-			System.out.println(name);
+			ArrayList<Square[]> pento = new ArrayList<Square[]>();
+			pento.add(va2);
+			pento.add(zb1);
+			pento.add(fa3);
+			pento.add(na2);
+			pento.add(pa0);
+			pento.add(wa3);
+			pento.add(ta1);
+			pento.add(yb0);
+			pento.add(ia0);
+			pento.add(xa0);
+			pento.add(ua3);
+			pento.add(la0);
+	
+			index = counter++%pento.size();
+						
 			boolean rainbow = false;
 			Color c = ColorE.colorM();
 			Square s = new Square(3,2); 
-			Square[] newPiece = copyPentomino(pentomino.get(index));
+			Square[] newPiece = copyPentomino(pento.get(index));
 			
 			
 			for (Square square : newPiece) {
@@ -137,6 +149,31 @@ import Pentomino.Interfaces.PentominoInterface;
 			squares.add(newPiece[2]);
 			squares.add(newPiece[3]);
 			squares.add(newPiece[4]);
+			
+			}else{
+				//TODO modify the constructor that a random pentomino gets choosen. Depending on the chosen pentomino, a different color should be used
+				loadPentominosIntoArray();
+				Random r = new Random();
+				index = r.nextInt(pentomino.size());
+				getIndexOfPentomino("xa1",false);
+								
+				this.name = pentominoNames.get(index);
+				System.out.println(name);
+				boolean rainbow = false;
+				Color c = ColorE.colorM();
+				Square s = new Square(3,2); 
+				Square[] newPiece = copyPentomino(pentomino.get(index));
+				
+				
+				for (Square square : newPiece) {
+					if (rainbow)square.setC(ColorE.colorM());else square.setC(c);
+				}
+				squares.add(newPiece[0]);
+				squares.add(newPiece[1]);
+				squares.add(newPiece[2]);
+				squares.add(newPiece[3]);
+				squares.add(newPiece[4]);
+			}
 			
 		}
 		

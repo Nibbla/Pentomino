@@ -145,7 +145,7 @@ public class Configuration
 			s.close();
 			return;
 		}
-		if(!values.containsKey("left") || !values.containsKey("right") || !values.containsKey("rotate") || !values.containsKey("down") || !values.containsKey("allTheWayDown"))
+		if(!values.containsKey("left") || !values.containsKey("right") || !values.containsKey("rotate") || !values.containsKey("down") || !values.containsKey("AllTheWayDown"))
 		{
 			System.out.println("Invalid names in config, saving defaults");
 			saveConfig();
