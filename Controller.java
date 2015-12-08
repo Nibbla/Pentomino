@@ -31,9 +31,9 @@ public class Controller implements KeyListener,Control{
 			buttons[Control.Buttons.Down.ordinal()]=true;
 			System.out.println("down pressed");
 			
-		}else if (KeyEvent.getKeyText(e.getKeyCode()).equals(Configuration.pause)){
-			buttons[Control.Buttons.Start.ordinal()]=true;
-			System.out.println("pause pressed");
+		}else if (KeyEvent.getKeyText(e.getKeyCode()).equals(Configuration.AllTheWayDown)){
+			buttons[Control.Buttons.AllTheWayDown.ordinal()]=true;
+			System.out.println("SpaceBar pressed");
 		}
 	}
 	
@@ -54,9 +54,9 @@ public class Controller implements KeyListener,Control{
 			System.out.println("down released");
 			buttons[Control.Buttons.Down.ordinal()]=false;
 			
-		}else if (KeyEvent.getKeyText(e.getKeyCode()).equals(Configuration.pause)){
-			System.out.println("pause released");
-			buttons[Control.Buttons.Start.ordinal()]=false;
+		}else if (KeyEvent.getKeyText(e.getKeyCode()).equals(Configuration.AllTheWayDown)){
+			System.out.println("SpaceBar released");
+			buttons[Control.Buttons.AllTheWayDown.ordinal()]=false;
 		}
 	}
 

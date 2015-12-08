@@ -72,7 +72,7 @@ public class PentominoMain extends Canvas implements Runnable,Display{
 				
 				
 				final JFrame alert = new JFrame("High Score");
-				alert.setSize(500, 400);
+				alert.setSize(250, 300);
 				alert.setLayout(null);
 				alert.setLocationRelativeTo(null);
 				alert.setAlwaysOnTop(true);

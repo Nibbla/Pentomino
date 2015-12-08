@@ -150,7 +150,17 @@ public class Board {
 		if (c.isButtonPressed(Control.Buttons.Right) ){
 			livingPentomino.moveX(1);
 			if(isCollision()){livingPentomino.moveX(-1);}
-		}}
+		}
+		if (c.isButtonPressed(Control.Buttons.AllTheWayDown) ){
+			do{
+			livingPentomino.moveY(1);
+			
+			}while(!isCollision());
+			
+			livingPentomino.moveY(-1);
+			
+		}
+		}
 		
 		
 		
