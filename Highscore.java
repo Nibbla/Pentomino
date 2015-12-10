@@ -23,7 +23,12 @@ public class Highscore
 	
 	public long clearedLines;
 	private static String name;
-
+	/**
+	 * point system for the game
+	 * @param score the current score in the game
+	 * @param lines the lines that were cleared
+	 * @return returns the current games score
+	 */
 	public int score(int score, long lines) 
 	{	
 		this.clearedLines = lines;
@@ -46,6 +51,10 @@ public class Highscore
 		return score;		
 	}
 	
+	/**
+	 * updates high score
+	 * @param score the current games score to be stored in high score
+	 */
 	public void updateHighscore(int score)
 	{		
 		if (score > score5)
@@ -109,7 +118,10 @@ public class Highscore
 			}
 		}
 	}
-	
+	/**
+	 * loads high score from text file
+	 * @throws Exception
+	 */
 	public void loadHighscore() throws Exception
 	{
 		String path = Paths.get(".").toAbsolutePath().normalize().toString();
@@ -149,7 +161,10 @@ public class Highscore
 		
 		in.close();
 	}
-		
+	/**
+	 * saves high score to a text file
+	 * @throws Exception
+	 */
 	public static void saveHighscore() throws Exception
 	{
 		String path = Paths.get(".").toAbsolutePath().normalize().toString();
@@ -174,7 +189,9 @@ public class Highscore
 		pw.close();
 		
 	}
-	
+	/**
+	 * clears high score
+	 */
 	public void clearHighscore()
 	{
 		name1 = "";
@@ -188,34 +205,64 @@ public class Highscore
 		score4 = 0;
 		score5 = 0;
 	}
-	
+	/**
+	 * getter for score
+	 * @return scores in high score
+	 */
 	public int getScore1()
 	{		return score1;	}
-	
+	/**
+	 * getter for score
+	 * @return scores in high score
+	 */
 	public int getScore2()
 	{		return score2;	}
-	
+	/**
+	 * getter for score
+	 * @return scores in high score
+	 */
 	public int getScore3()
 	{		return score3;	}
-	
+	/**
+	 * getter for score
+	 * @return scores in high score
+	 */
 	public int getScore4()
 	{		return score4;	}
-	
+	/**
+	 * getter for score
+	 * @return scores in high score
+	 */
 	public int getScore5()
 	{		return score5;	}
-	
+	/**
+	 * getter for name
+	 * @return name in high score
+	 */
 	public String getName1()
 	{		return name1;	}
-	
+	/**
+	 * getter for name
+	 * @return name in high score
+	 */
 	public String getName2()
 	{		return name2;	}
-	
+	/**
+	 * getter for name
+	 * @return name in high score
+	 */
 	public String getName3()
 	{		return name3;	}
-	
+	/**
+	 * getter for name
+	 * @return name in high score
+	 */
 	public String getName4()
 	{		return name4;	}
-	
+	/**
+	 * getter for name
+	 * @return name in high score
+	 */
 	public String getName5()
 	{		return name5;	}
 

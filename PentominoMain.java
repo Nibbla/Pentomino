@@ -30,7 +30,10 @@ public class PentominoMain extends Canvas implements Runnable,Display{
 	
 	protected static JLabel scoreLabel2 = new JLabel();
 
-	
+	/**
+	 * the main method where the main JFrame is created and most methods are called
+	 * @param args
+	 */
 	public static void main(String[] args){
 		
 		pm = new PentominoMain();
@@ -182,10 +185,9 @@ public class PentominoMain extends Canvas implements Runnable,Display{
 		
 	}
 	
-	/**This methods is executed after the users klings on start a new game
-	 * @param pm 
-	 * @param spezial 
-	 * 
+	/**
+	 * starts a new game when "new game" or "optimal solution" is clicked
+	 * @param pm Pentomino Main interface parameter
 	 */
 	protected static void startNewGame(final PentominoMain pm, String special) {
 		pm.game = new Game((Control)pm.controller, (Display)pm, null);
@@ -209,12 +211,17 @@ public class PentominoMain extends Canvas implements Runnable,Display{
 		pm.game.start();
 	}
 
+	/**
+	 * starts the timer
+	 */
 	public void start() {
 		Thread t = new Thread(this);
 		t.setPriority(Thread.MAX_PRIORITY);
 		t.start();
 	}
-
+	/**
+	 * does the rendering
+	 */
 	public void run(){
 		boolean running = true;
 		initialize();
@@ -234,26 +241,38 @@ public class PentominoMain extends Canvas implements Runnable,Display{
 	public void update(){
 		
 	}
-	
+	/**
+	 * initializes controller
+	 */
 	public void initialize(){
 		
 		this.addKeyListener(controller);
 		requestFocus();
 		
 	}
-	
+	/**
+	 * draws the welcome screen and calls the method to draw the board
+	 * @param g the graphics 
+	 */
 	public void render(Graphics2D g){
 	if (board==null){
-		g.setColor(Color.MAGENTA);
+		g.setColor(Color.BLACK);
 		g.fillRect(0, 0, WIDTH, HEIGHT);
-		g.setColor(Color.WHITE);
-		g.setFont(new Font("Calibri", Font.PLAIN, 20));
-		g.drawString("Pentomino", 140, 50);
+		g.setColor(Color.MAGENTA);
+		g.setFont(new Font("Calibri", Font.PLAIN, 28));
+		g.drawString("Pentomino", 95, 250);
 		}else{
 		drawBoard(g,WIDTH,HEIGHT-25,board);
 		}
 	}
 
+	/**
+	 * draws the board
+	 * @param g the graphics 
+	 * @param width2 the width
+	 * @param height2 the height
+	 * @param board2 the board
+	 */
 	private void drawBoard(Graphics2D g, int width2, int height2, Board board2) {
 		g.setColor(Color.lightGray);
 		g.fillRect(0, 0, width2, height2);
@@ -293,6 +312,13 @@ public class PentominoMain extends Canvas implements Runnable,Display{
 		}
 	}
 
+	/**
+	 * draws the ending animation, the rainbow
+	 * @param g the graphics
+	 * @param width2 the width of the board
+	 * @param height2 the height of the board
+	 * @param board2 the board
+	 */
 	private void drawEndgame(Graphics2D g, int width2, int height2, Board board2) {
 		Square[][] s = board2.getFullBoard();
 		int count = 0;
@@ -362,20 +388,32 @@ public class PentominoMain extends Canvas implements Runnable,Display{
 		
 	}
 
+	/**
+	 * sets the board
+	 */
 	public void setData(Board b) {
 		this.board = b;
 		
 	}
 
+	
 	public void refresh() {
 		// TODO Auto-generated method stub
 		
 	}
 
+	/**
+	 * getter for the display interface
+	 * @return the interface parameter
+	 */
 	public static Display getDisplayInstance() {
 		
 		return pm;
 	}
+	/**
+	 * getter for the pentomino main instance
+	 * @return the interface parameter
+	 */
 	public static PentominoMain getInstance() {
 		
 		return pm;
@@ -385,6 +423,9 @@ public class PentominoMain extends Canvas implements Runnable,Display{
 		
 	}
 
+	/**
+	 * closes the program
+	 */
 	public void close() {
 		System.out.println("Closing...");
 		System.exit(0);
@@ -392,16 +433,27 @@ public class PentominoMain extends Canvas implements Runnable,Display{
 		
 	}
 
+	/**
+	 * getter for the controller
+	 * @return the controller
+	 */
 	public Control getController() {
 		
 		return controller;
 	}
 
+	/**
+	 * getter for the board
+	 * @return the board
+	 */
 	public Board getBoard() {
 		return this.board;
 		
 	}
-	
+	/**
+	 * getter for the game
+	 * @return game interface
+	 */
 	public TetrisGame getGame() {
 		
 		return game;

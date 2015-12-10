@@ -12,7 +12,11 @@ public class ColorE extends Color{
 		//color=r.setColor();		
 		return b;
 	}
-		
+	
+	/**
+	 * picks a random color
+	 * @return the random color
+	 */
 	public static  Color colorM(){			
 		int R = (int)(Math.random()*256);
 		int G = (int)(Math.random()*256);
@@ -20,7 +24,14 @@ public class ColorE extends Color{
 		Color color= new Color(R,G,B);			
 		return color;
 	}
-			
+	
+	/**
+	 * getter for color in integer from
+	 * @param R red
+	 * @param G green
+	 * @param B blue
+	 * @return color in integer form
+	 */
 	public int getColorInt(float R ,float G,float  B){
 		
 		// r =Math.round(255*r);
@@ -38,11 +49,17 @@ public class ColorE extends Color{
 			
 		return color.getRGB();
 	}
-				
+	
+	/**
+	 * contructor for color
+	 * @param R red 
+	 * @param G green
+	 * @param B blue
+	 */
 	public ColorE(float R, float G, float B){
 		super(R,G,B);	
 	}
-			
+		
 	public static void main(String[] args){
 			
 		int a=0;//((int)0-256);

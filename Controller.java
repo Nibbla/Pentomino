@@ -12,7 +12,9 @@ public class Controller implements KeyListener,Control{
 	public Controller(){
 		
 	}
-	
+	/**
+	 * checks when keys are pressed
+	 */
 	public void keyPressed(KeyEvent e){
 		
 		if (KeyEvent.getKeyText(e.getKeyCode()).equals(Configuration.left)){
@@ -37,6 +39,9 @@ public class Controller implements KeyListener,Control{
 		}
 	}
 	
+	/**
+	 * checks when keys are released
+	 */	
 	public void keyReleased(KeyEvent e){
 		if (KeyEvent.getKeyText(e.getKeyCode()).equals(Configuration.left)){
 			System.out.println("left released");
@@ -64,11 +69,19 @@ public class Controller implements KeyListener,Control{
 		
 	}
 
-	
+	/**
+	 *  checks if a button is pressed
+	 *  @return which button is pressed
+	 */
 	public boolean isButtonPressed(Buttons b) {		
 		return buttons[b.ordinal()];
 	}
 
+	/**
+	 *  overrides the current value of a button when it is pressed again
+	 *  @param b the button
+	 *  @param newValue the new value
+	 */	
 	public void overRideButton(Buttons b, boolean newValue) {
 		buttons[b.ordinal()] = newValue;
 		

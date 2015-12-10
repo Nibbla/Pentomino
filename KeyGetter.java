@@ -10,7 +10,9 @@ public class KeyGetter {
 	
 	protected static HashMap<String, Integer> keys;
 	protected static ArrayList<String> keyNames;
-	
+	/**
+	 * loads keys from hashmap
+	 */
 	public static void loadKeys(){
 		keys = new HashMap<String, Integer>();
 		keyNames = new ArrayList<String>();

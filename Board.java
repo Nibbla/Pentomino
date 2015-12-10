@@ -23,7 +23,12 @@ public class Board {
 	public int getcurrentScore(){
 		return currentScore;
 	}
-
+	
+	/**
+	 * constructor that creates the board full of empty squares
+	 * @param gameWidth
+	 * @param gameHeight
+	 */
 	public Board(int gameWidth, int gameHeight){
 		board = new Square[gameHeight][gameWidth];
 		score = new Highscore();
@@ -36,6 +41,10 @@ public class Board {
 		
 	}
 	
+	/**
+	 * checks for full lines and returns an array list containing their indexes
+	 * @return
+	 */
 	public ArrayList<Integer> checkForFullLines(){
 		ArrayList<Integer> fullLines = new ArrayList<Integer>();
 		for (int i = 0;i<board.length;i++){
@@ -54,6 +63,12 @@ public class Board {
 		
 		return fullLines;
 	}
+	
+	/**
+	 * removes the full lines and moves the rest of the pieces down and returns the number of lines
+	 * @param fullLines
+	 * @return
+	 */
 	public int removeFullLines(ArrayList<Integer> fullLines){
 		int lines = fullLines.size()*fullLines.size();
 		for (Integer line : fullLines) {
@@ -71,12 +86,26 @@ public class Board {
 		return lines;
 		
 	}
+	
+	/**
+	 * getter for a full board
+	 * @return the full board
+	 */
 	public Square[][] getFullBoard(){
 		return board;
 	}
+	
+	/**
+	 * getter for the current pentomino
+	 * @return the current pentomino
+	 */
 	public Pentomino getLivingPentomino(){
 		return livingPentomino;
 	}
+	
+	/**
+	 * moves the current pentomino all the way down
+	 */
 	public void setLivingPentominoDown(){
 		System.out.println("puff");
 		if (livingPentomino==null)return;
@@ -92,6 +121,9 @@ public class Board {
 		}
 		livingPentomino=null;
 	}
+	/**
+	 * moves current pentomino down by 1
+	 */
 	public void moveLivingPentominoOneTick(){
 		if (livingPentomino==null) {
 			livingPentomino = new Pentomino();
@@ -114,6 +146,12 @@ public class Board {
 			return;
 		}
 	}
+	
+	/**
+	 * method for moving pentomino on the board
+	 * @param c
+	 * @param reverseXY
+	 */
 	public void moveLivingPentomino(Control c, boolean reverseXY) {
 		if (livingPentomino==null)return;
 		
@@ -166,13 +204,19 @@ public class Board {
 		
 	}
 
+	
+	/**
+	 * moves pentomino to given X and Y position
+	 * @param y
+	 * @param x
+	 */
 	public void moveLivingPentomino(int y, int x) {
 		if (livingPentomino==null)return;
 		livingPentomino.moveX(x);
 		livingPentomino.moveY(y);
 		
 	}
-
+/*
 	public ArrayList<Square[][]> getFullBoardShadow() {
 		//remember this ArrayList<Square>[][];
 		 for (int i = 0; i < board.length; i++) {
@@ -191,12 +235,21 @@ public class Board {
 		 asd.add(shadowBoard2);
 		return asd;
 	}
-
+*/
+	
+	/**
+	 * setter for the board
+	 * @param extracted
+	 */
 	public void setFullBoard(Square[][] extracted) {
 		board = extracted;
 		
 	}
 
+	/**
+	 * checks for collision
+	 * @return true if there is a collision
+	 */
 	public boolean isCollision() {
 		Pentomino p = getLivingPentomino();
 		if (p==null)return false;

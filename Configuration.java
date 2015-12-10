@@ -20,6 +20,11 @@ public class Configuration
 	protected static String rotate = "Up", left = "Left", right = "Right", down = "Down", AllTheWayDown = "Space";
 	private static ArrayList<Choice> choices;
 	
+	
+	/**
+	 * opens configuration window 
+	 * @param frame 
+	 */
 	public static void openConfig(JFrame frame)
 	{
 		
@@ -59,6 +64,9 @@ public class Configuration
 		options.setVisible(true);
 	}
 	
+	/**
+	 * saves the changes made from the menu for the keys
+	 */
 	public static void saveChanges()
 	{
 		Choice left = choices.get(0);
@@ -84,6 +92,14 @@ public class Configuration
 		
 	}
 	
+	/**
+	 * adds the keys as possible choices in drop down menu
+	 * @param name name of the key
+	 * @param options 
+	 * @param x 
+	 * @param y
+	 * @return the key
+	 */
 	public static Choice addChoice(String name, JFrame options, int x, int y)
 	{
 		JLabel label = new JLabel(name);
@@ -100,6 +116,10 @@ public class Configuration
 		return key;
 	}
 	
+	/**
+	 * getter for key names
+	 * @return arrayList of the keys
+	 */
 	public static ArrayList<String>	getKeyNames()
 	{
 		ArrayList<String> result = new ArrayList<String>();
@@ -113,6 +133,10 @@ public class Configuration
 		return result;
 	}
 	
+	/**
+	 * loads configurations from the file
+	 * @throws Exception
+	 */
 	public static void loadConfig() throws Exception
 	{
 		String path = Paths.get(".").toAbsolutePath().normalize().toString();
@@ -174,6 +198,10 @@ public class Configuration
 		s.close();
 	}
 	
+	/**
+	 * saves configurations in file
+	 * @throws Exception
+	 */
 	public static void saveConfig() throws Exception
 	{
 		String path = Paths.get(".").toAbsolutePath().normalize().toString();

@@ -21,6 +21,12 @@ public class Game implements TetrisGame
 	private Timer t2;
 	private int points=0;
 	
+	/**
+	 *  contructor to create game in beginning
+	 * @param c the control parameter
+	 * @param d the display parameter
+	 * @param CI the configuration interface parameter
+	 */
 	public Game(Control c, Display d,ConfigurationInterface CI)
 	{
 		
@@ -44,7 +50,9 @@ public class Game implements TetrisGame
 	   b.board[2][2].setC(Color.RED);*/
 	   d.setData(b);
    }
-
+	/**
+	 * starts the game
+	 */
 	public void start()
 	{
 		points = 0;
@@ -93,7 +101,9 @@ public class Game implements TetrisGame
 		t1.start();
 		t2.start();
 	}
-
+	/**
+	 * creates standard configuration interface
+	 */
 	private void createStandartConfigurationInterface() 
 	{
 		CI = new ConfigurationInterface() 
@@ -134,27 +144,46 @@ public class Game implements TetrisGame
 			}
 		};
 	}
-	
+	/**
+	 * moves the pentomino down
+	 * @param c the control interface parameter
+	 */
 	public void MoveControl(Control c) 
 	{		b.moveLivingPentomino(c,false);		}
 
+	/**
+	 * moves the pentomino down
+	 */
 	public void MoveTime() 
 	{		b.moveLivingPentominoOneTick();		}
-	
+	/**
+	 * checks for collision
+	 */
 	public boolean Collision() 
 	{		return b.isCollision();		}
-	
+	/**
+	 * places the piece
+	 */
 	public boolean PlacePiece()
 	{		return false;	}
-	
+	/**
+	 * sets the control interface
+	 * @param c the control interface parameter
+	 */
 	protected void setC(Control c) 
 	{		this.c = c;		}
-	
+	/**
+	 * returns the number of deleted lines
+	 */
 	public long getDestroyedLines() 
 	{		return points;	}
-	
+	/**
+	 * returns points
+	 * @return
+	 */
 	public int getPoints() 
 	{		return points;	}
+	
 	
 	public void NextPiece(){}
 	
