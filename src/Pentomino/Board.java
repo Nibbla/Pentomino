@@ -7,13 +7,14 @@ import java.util.Arrays;
 import Pentomino.Interfaces.Control;
 
 public class Board {
-	Square[][] board;
+	Square[][] board;//y x
 	Square[][] shadowBoard;
 	Pentomino livingPentomino;
 	Pentomino shadowPentomino;
 	private boolean rotatePressed;
 	private boolean endgame;
-	protected boolean isEndgame() {
+	private StringBuilder move = new StringBuilder("");
+	public boolean isEndgame() {
 		return endgame;
 	}
 
@@ -22,13 +23,26 @@ public class Board {
 		shadowBoard = new Square[gameHeight][gameWidth];
 		for (int i = 0; i < board.length; i++) {
 			for (int j = 0; j < board[0].length; j++) {
-				board[i][j]=new Square(i, j);
+				board[i][j]=new Square(j, i);
 			}
 		}
 		
 	}
 	
 	public ArrayList<Integer> checkForFullLines(){
+		ArrayList<Integer> fullLines = new ArrayList<Integer>();
+		for (int i = 0;i<board.length;i++){
+			int count = 0;
+			for (int j = 0;j<board[1].length;j++){
+				if (board[i][j].getC().getRGB()!=Color.GRAY.getRGB())count++;
+			}
+			if (count == board[1].length){
+				fullLines.add(i);
+			}
+		}
+		return fullLines;
+	}
+	public static ArrayList<Integer> checkForFullLines(Square[][] board){
 		ArrayList<Integer> fullLines = new ArrayList<Integer>();
 		for (int i = 0;i<board.length;i++){
 			int count = 0;
@@ -66,13 +80,13 @@ public class Board {
 	public Pentomino getLivingPentomino(){
 		return livingPentomino;
 	}
-	public void setLivingPentominoDown(){
+	public String setLivingPentominoDown(){
 		System.out.println("puff");
-		if (livingPentomino==null)return;
+		if (livingPentomino==null) return "";
 		if (livingPentomino.above(0)){
 			System.out.println("endgame");
 			this.endgame = true;
-			return;
+			return "";
 		}
 		Square[] s = livingPentomino.getSquares();
 		for (int i= 0;i<s.length;i++){
@@ -80,6 +94,7 @@ public class Board {
 			board[ss.getY()][ss.getX()]=ss;
 		}
 		livingPentomino=null;
+		return "puff";
 	}
 	public void moveLivingPentominoOneTick(){
 		if (livingPentomino==null) {
@@ -103,8 +118,8 @@ public class Board {
 			return;
 		}
 	}
-	public void moveLivingPentomino(Control c, boolean reverseXY) {
-		if (livingPentomino==null)return;
+	public String moveLivingPentomino(Control c, boolean reverseXY) {
+		if (livingPentomino==null)return move.toString() ;
 		
 			if (c.isButtonPressed(Control.Buttons.RotateRight) && !rotatePressed){
 				
@@ -112,16 +127,29 @@ public class Board {
 				
 				rotatePressed=true;
 				if(isCollision()){
+					
+					if (!squeze()){
+					
 					livingPentomino.rotate(false^reverseXY);
 					rotatePressed=false;
+					}else{
+						move.append("warp");
+					}
 				}
 			}
 			if (c.isButtonPressed(Control.Buttons.RotateLeft)  && !rotatePressed){
 				livingPentomino.rotate(false^reverseXY);
 				rotatePressed=true;
 				if(isCollision()){
-					livingPentomino.rotate(true^reverseXY);
-					rotatePressed=false;
+					
+					if (!squeze()){
+						livingPentomino.rotate(true^reverseXY);
+						rotatePressed=false;
+						 
+						}else{
+							move.append("warp");
+						}
+					
 				}
 			}
 			if (!c.isButtonPressed(Control.Buttons.RotateLeft) && !c.isButtonPressed(Control.Buttons.RotateRight)) rotatePressed=false;
@@ -129,20 +157,45 @@ public class Board {
 		
 		if (c.isButtonPressed(Control.Buttons.Left) ){
 			livingPentomino.moveX(-1);
-			if(isCollision()){livingPentomino.moveX(1);}
+			if(isCollision()){livingPentomino.moveX(1);};
 			
 		}
 		if (c.isButtonPressed(Control.Buttons.Down) ){
 			livingPentomino.moveY(1);
-			if(isCollision()){livingPentomino.moveY(-1);}
+			if(isCollision()){livingPentomino.moveY(-1);};
 		}
 		if (c.isButtonPressed(Control.Buttons.Right) ){
 			livingPentomino.moveX(1);
-			if(isCollision()){livingPentomino.moveX(-1);}
+			if(isCollision()){livingPentomino.moveX(-1);};
 		}}
 		
+		return move.toString();
 		
+	}
+
+	private boolean squeze() {
+		livingPentomino.moveX(-1);
+		if(!isCollision()){ 
+			return true;
+		}
+		livingPentomino.moveX(1);
+		livingPentomino.moveX(1);
+		if(!isCollision()){ 
+			return true;
+		}
+		livingPentomino.moveX(-1);
 		
+		livingPentomino.moveY(1);
+		if(!isCollision()){ 
+			return true;
+		}
+		livingPentomino.moveY(-1);
+		livingPentomino.moveY(-1);
+		if(!isCollision()){ 
+			return true;
+		}
+		livingPentomino.moveY(1);
+		return false;
 	}
 
 	public void moveLivingPentomino(int y, int x) {
@@ -152,31 +205,44 @@ public class Board {
 		
 	}
 
-	public ArrayList<Square[][]> getFullBoardShadow() {
+	public Square[][] getFullBoardShadow() {
+		 Square[][] shadow = new  Square[board.length][board[0].length];
 		//remember this ArrayList<Square>[][];
 		 for (int i = 0; i < board.length; i++) {
-			 shadowBoard[i] = Arrays.copyOf(board[i], board[i].length);
+			 for (int j = 0;j < board[0].length; j++) {
+				 shadow[i][j]= new Square(j, i);
+				 shadow[i][j].setC(board[i][j].getC());
+				
+			 }
+			
+			 
 		 }
-		 //maybeInverse here, for the 4d part....
-		 
-		 
-		 
-		Square[][] shadowBoard2 = new Square[board.length][board[0].length];
-		 for (int j = 0; j < board.length; j++) {
-			 shadowBoard2[j] = Arrays.copyOf(board[j], board[j].length);
-			}
-		 ArrayList<Square[][]> asd = new ArrayList<Square[][]>();
-		 asd.add(shadowBoard);
-		 asd.add(shadowBoard2);
-		return asd;
+		 Color c = ColorE.colorM();
+		 if (livingPentomino == null) return shadow;
+		 for (Square square : livingPentomino.getSquares()) {
+			 if (square.getX()<0) return null;
+			 if (square.getX()>=shadow[0].length) return null;
+			 if (square.getY()<0) return null;
+			 if (square.getY()>=shadow.length) return null;
+			 if (!shadow[square.getY()][square.getX()].getC().equals(Color.GRAY)) return null;
+			 shadow[square.getY()][square.getX()].setC(c);
+		}
+		
+		return shadow;
 	}
 
 	public void setFullBoard(Square[][] extracted) {
-		board = extracted;
+		if (extracted==null)return;
+		for (int y = 0; y<extracted.length; y++){
+			for (int x = 0; x<extracted[0].length; x++){
+				board[y][x].setC(extracted[y][x].getC());
+		}
+		}
 		
 	}
 
 	public boolean isCollision() {
+		
 		Pentomino p = getLivingPentomino();
 		if (p==null)return false;
 		for (Square s : p.getSquares()) {
@@ -184,15 +250,56 @@ public class Board {
 			int y =s.getY();
 			int x =s.getX();
 			if (y<0)continue;
-			if (y>=ss.length)return true;
-			if (x<0) return true;
-			if (x>=ss[0].length)return true;
+			if (y>=ss.length){move.append("bunk");return true;}
+			if (x<0){move.append("bunk"); return true;}
+			if (x>=ss[0].length){move.append("bunk"); return true;}
 			if(!ss[s.getY()][s.getX()].getC().equals(Color.GRAY)){
+				move.append("boing"); 
 				return true;
 			}
 			
 		}
 		return false;
+	}
+
+	public void setMove(String move) {
+		this.move.append(move);
+	}
+
+	public  String getMove() {
+		
+		return move.toString();
+	}
+
+	public ArrayList<Double> getNextMovePieces(int weightY, int weightX, int weightLines) {
+		
+		ArrayList<Double> potential = new ArrayList<Double>();
+		Pentomino lp = getLivingPentomino();
+		//int[] yx = getFirstFreeBloock(p.getGame().getBoard().getFullBoard());
+		
+		moveLivingPentomino(0, 1);
+		potential.add(Square.calculatePotential(getFullBoardShadow(), weightY, weightX, weightLines)); //check right
+		moveLivingPentomino(0, -1);
+		moveLivingPentomino(1, 0);
+		potential.add(Square.calculatePotential(getFullBoardShadow(), weightY, weightX, weightLines)); //check down
+		moveLivingPentomino(-1, 0);
+		moveLivingPentomino(0, -1);
+		potential.add(Square.calculatePotential(getFullBoardShadow(), weightY, weightX, weightLines)); //check links
+		moveLivingPentomino(0, 1);
+		
+		lp.rotate(false);
+		potential.add(Square.calculatePotential(getFullBoardShadow(), weightY, weightX, weightLines)); //check roation
+		lp.rotate(true);
+		
+		
+		
+		
+		return potential;
+	}
+
+	public void setLivingPentomino(Pentomino object) {
+		this.livingPentomino = object;
+		
 	}
 	
 	

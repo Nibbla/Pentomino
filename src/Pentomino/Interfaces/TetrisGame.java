@@ -1,5 +1,7 @@
 package Pentomino.Interfaces;
 
+import Pentomino.Board;
+
 
 /**Implements Methods of a typical Tetris game
  * These are start();
@@ -20,8 +22,9 @@ public abstract interface TetrisGame {
 	
 	/**Makes a move as input
 	 * @param c
+	 * @return 
 	 */
-	abstract void MoveControl(Control c);
+	abstract String MoveControl(Control c);
 	
 	/**One standart Step a piece falls to the ground
 	 * 
@@ -53,4 +56,11 @@ public abstract interface TetrisGame {
 	 * @return the current score of this player
 	 */
 	abstract long getScore();
+
+	abstract Board getBoard();
+
+	abstract String tick(String string);
+
+	abstract String tick();
+
 }

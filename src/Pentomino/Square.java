@@ -1,6 +1,9 @@
 package Pentomino;
 
 import java.awt.Color;
+import java.util.ArrayList;
+
+import javax.swing.text.StyledEditorKit.BoldAction;
 
 public class Square implements Cloneable{
 	private int x,y,z;
@@ -50,4 +53,55 @@ public class Square implements Cloneable{
 		s.c = new Color(c.getRGB());
 		return s;
 	}
+	public static double calculatePotential(Square[][] board,int weightY, int weightX, int weightLines) {
+		if (board == null) return -1;
+		double potential = 0;
+		potential += potentialX(board)*weightX;
+		potential += potentialY(board)*weightY;
+		potential += potentialLines(board)*weightLines;
+		
+		return potential;
+	}
+	private static double potentialLines(Square[][] board) {
+		double potential = 0;
+		double pieceNumber = 0;
+		ArrayList<Integer> lines = Board.checkForFullLines(board);
+		
+		for (Integer i : lines) {
+			potential =+  board[0].length / 3 * (board.length-i); 
+			pieceNumber++;
+		}
+		
+		 
+		return potential;
+	}
+	private static double potentialY(Square[][] board) {
+		double potential = 0;
+		double pieceNumber = 0;
+		for (int i = 0;i<board.length;i++){
+			for (int j = 0;j<board[0].length;j++){
+				if (!board[i][j].getC().equals(Color.GRAY)){
+					potential = potential + (i+1);
+					//pieceNumber++;
+				}
+			}
+		}
+		//potential /= pieceNumber;
+		return potential;
+	}
+	private static double potentialX(Square[][] board) {
+		int potential = 0;
+		int pieceNumber = 0;
+		for (int i = 0;i<board.length;i++){
+			for (int j = 0;j<board[0].length;j++){
+				if (!board[i][j].getC().equals(Color.GRAY)){
+					potential = potential + (board[0].length-j-1);
+					//pieceNumber++;
+				}
+			}
+		}
+		//potential /= pieceNumber;
+		return potential;
+	}
+	
 }

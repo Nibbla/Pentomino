@@ -4,6 +4,10 @@ import java.awt.*;
 import java.lang.Object;
 
 
+		/**
+		 * @author Emil
+		 *
+		 */
 		public class ColorE extends Color{
 		
 			private static Color white;

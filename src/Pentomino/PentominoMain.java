@@ -26,6 +26,8 @@ public class PentominoMain extends Canvas implements Runnable,Display{
 	private int endgamecount;
 	private Timer timerEndgame;
 	private boolean endGame2;
+
+	private boolean oneTime;
 	private static PentominoMain pm ;
 	
 	public static void main(String[] args){
@@ -214,16 +216,34 @@ public class PentominoMain extends Canvas implements Runnable,Display{
 		if (p==null) return;
 		Square[] ps= p.getSquares();
 		
-		for (int i = 0; i<ps.length;i++){
-			g.setColor(ps[i].getC());
-			g.fillRect(squareWidth*ps[i].getX(), squareHeight*ps[i].getY(), squareWidth, squareHeight);
-			g.setColor(Color.BLACK);
-			g.drawRect(squareWidth*ps[i].getX(), squareHeight*ps[i].getY(), squareWidth, squareHeight);	
-		}
+		
 		if (board2.isEndgame()){
-			
+			if (!oneTime) {
+				for (int i = 0; i<ps.length;i++){
+					if (ps[i].getX()>=0&&ps[i].getX()<s[0].length){
+						
+						if (ps[i].getY()>=0&&ps[i].getY()<s.length){
+							s[ps[i].getY()][ps[i].getX()].setC(ps[i].getC());
+						}
+						
+					}
+					
+				}
+				oneTime=true;
+			}
 			timerEndgame.start();
 			drawEndgame(g, width2, height2, board2);
+			
+		}else{
+			for (int i = 0; i<ps.length;i++){
+				
+				
+				
+				g.setColor(ps[i].getC());
+				g.fillRect(squareWidth*ps[i].getX(), squareHeight*ps[i].getY(), squareWidth, squareHeight);
+				g.setColor(Color.BLACK);
+				g.drawRect(squareWidth*ps[i].getX(), squareHeight*ps[i].getY(), squareWidth, squareHeight);	
+			}
 		}
 	}
 
@@ -247,30 +267,22 @@ public class PentominoMain extends Canvas implements Runnable,Display{
 					endGame2=true;
 				}
 				if(endGame2!=true){
-				if (s[j][i].getC().equals(Color.GRAY)){
-					//System.out.println("something");
-					
-					if (count++<endgamecount){
-						s[j][i].setC(m);
-						return;
+					if (s[j][i].getC().equals(Color.GRAY)){
+						if (count++<=endgamecount){
+							s[j][i].setC(m);
+							return;
+						}
 					}
-					
-					//g.setColor(m);
-					
-				/*g.fillRect(squareWidth*i, squareHeight*j, squareWidth, squareHeight);
-				g.setColor(Color.BLACK);
-				g.drawRect(squareWidth*i, squareHeight*j, squareWidth, squareHeight);		*/	
-				}else{
-					//System.out.println(endgamecount + "notsomething");
-				}
 				
 				}else{
 					if (!s[j][i].getC().equals(Color.GRAY)){
 						//System.out.println("engame2");
 						
-						if (count++<endgamecount){
+						if (count++<=endgamecount){
 							s[j][i].setC(Color.GRAY);
 							return;
+						}else{
+							oneTime=false;
 						}
 					}
 				}
@@ -285,12 +297,12 @@ public class PentominoMain extends Canvas implements Runnable,Display{
 			 //board2.livingPentomino=null;
 			
 		}else{
-		for (int i = 0; i<ps.length;i++){
-			g.setColor(ps[i].getC());
-			g.fillRect(squareWidth*ps[i].getX(), squareHeight*ps[i].getY(), squareWidth, squareHeight);
-			g.setColor(Color.BLACK);
-			g.drawRect(squareWidth*ps[i].getX(), squareHeight*ps[i].getY(), squareWidth, squareHeight);	
-		}
+		//for (int i = 0; i<ps.length;i++){
+		//	g.setColor(ps[i].getC());
+		//	g.fillRect(squareWidth*ps[i].getX(), squareHeight*ps[i].getY(), squareWidth, squareHeight);
+		//	g.setColor(Color.BLACK);
+		//	g.drawRect(squareWidth*ps[i].getX(), squareHeight*ps[i].getY(), squareWidth, squareHeight);	
+		//}
 		}
 		
 		

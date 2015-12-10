@@ -22,11 +22,14 @@ public class Game implements TetrisGame{
 	
 	Display d;
 	Board b;
+	
 	ConfigurationInterface CI;
 	private Timer t1;
 	private Timer t2;
 
 	private int points;
+
+	private String move;
 	
    public Game(Control c, Display d,ConfigurationInterface CI){
 	   this.c = c;
@@ -40,6 +43,10 @@ public class Game implements TetrisGame{
 	  
 	   d.setData(b);
    }
+   
+   public Board getBoard() {
+		return b;
+	}
 
 /* (non-Javadoc)
  * @see Pentomino.Interfaces.TetrisGame#start()
@@ -48,32 +55,21 @@ public void start() {
 	points = 0;
 	t1 = new javax.swing.Timer(CI.getSpeedOfStep(), new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
-			System.out.println("tick");
-			
-			b.moveLivingPentominoOneTick();
-			if (Collision()){
-				b.moveLivingPentomino(-1,0);
-				b.setLivingPentominoDown(); //if endgame aktivates, it maybe removes full lines
-				if (b.isEndgame()) {
-					t1.stop();
-					t2.stop();
-				}
-				points +=b.removeFullLinesAndReturnNumberOfPoints(b.checkForFullLines());
-			}
-			d.refresh();
+			tick();
 		}
 	});
 	 t2 = new javax.swing.Timer(CI.getSpeedOfControl(), new ActionListener() {	
 		public void actionPerformed(ActionEvent e) {
-			MoveControl(c);
+			tick("move");		
 			
-			d.refresh();
 		}
 	});
 	t1.start();
 	t2.start();
 	
 }
+
+
 
 protected void setC(Control c) {
 	this.c = c;
@@ -114,9 +110,10 @@ private void createStandartConfigurationInterface() {
 	};
 	
 }
-public void MoveControl(Control c) {
+public String MoveControl(Control c) {
 	b.moveLivingPentomino(c,false);
-	
+	d.refresh();
+	return b.getMove();
 }
 
 public void MoveTime() {
@@ -142,6 +139,34 @@ public void UpdateScore() {
 public long getScore() {
 	// TODO Auto-generated method stub
 	return 0;
+}
+
+public String tick() {
+
+	
+	String s = "tick";
+	b.moveLivingPentominoOneTick();
+	if (Collision()){
+		b.moveLivingPentomino(-1,0);
+		b.setLivingPentominoDown(); //if endgame aktivates, it maybe removes full lines
+		s += "puff";
+		if (b.isEndgame()) {
+			t1.stop();
+			t2.stop();
+			s += "puffpuff";
+		}
+		
+	}
+	points +=b.removeFullLinesAndReturnNumberOfPoints(b.checkForFullLines());
+	d.refresh();
+	return s;
+}
+
+public String tick(String move) {
+	if (b.isEndgame())return "|";
+	b.setMove(move);
+	String r = MoveControl(c);
+	return r;	
 }
 
 }

@@ -395,6 +395,7 @@ import Pentomino.Interfaces.PentominoInterface;
 			
 		}
 		
+		
 		public void moveX(int j) {
 			for (Square s : squares) {
 				s.setX(s.getX()+j);
@@ -516,7 +517,7 @@ import Pentomino.Interfaces.PentominoInterface;
 	}
 	/**
 	 * @param line
-	 * @return return true if pentomino is complete to the left of this line
+	 * @return return true if pentomino is partly to the left of this line
 	 */
 	public boolean left(int column) {
 		for (Square s : squares) {
@@ -525,5 +526,56 @@ import Pentomino.Interfaces.PentominoInterface;
 		}
 		return false;
 }
+	 /**
+     *  This Method should return the vector, that the lowest leftmost part of an given set of pentomino coordinates
+     *  should align with the goal coordinates
+     */
+    public int[] getGeometricalTranslation(int[] goal){
+        //for example:
+        // pentomino[0] = {0,0}; pentronimo[1] = {-1,0}; pentronimo[2] = {1,0};pentronimo[3] = {0,1};
+        // pentomino[4] = {0,-1}; So if goal is {3,5} then the answer should be {3,6}
+        //Find the lowest x and the highest y of each pentomino
+        
+        int[][] pentomino = getTwoDimentionalArray(squares);
+        int[]vector=new int[2];
+        /**Found the element we want to add first*/
+        int min= 5;
+        int max= -5;
+        ArrayList<int[]>highestY = new ArrayList<int[]>();
+        int[] lowestLeftmost = {0,0};
+
+        for (int i=0; i<pentomino.length; i++){
+            if (pentomino[i][1]>max){
+                highestY.clear();
+                highestY.add(pentomino[i]);
+                max=pentomino[i][1];
+            }else if (pentomino[i][1]==max){
+                highestY.add(pentomino[i]);
+            }
+        }
+        for (int i=0; i<highestY.size(); i++){
+            if (highestY.get(i)[0]<min){
+                lowestLeftmost = highestY.get(i);
+                min=highestY.get(i)[0];
+            }
+        }
+
+        /**Find the vectorfor the xandy values:*/
+        vector[0]=goal[0]-lowestLeftmost[0];
+        vector[1]=goal[1]-lowestLeftmost[1];
+
+        return vector;
+    }
+
+	private int[][] getTwoDimentionalArray(ArrayList<Square> squares2) {
+		int[][] newArray = new int[squares2.size()][2];
+		for (int i = 0;i<squares2.size();i++){
+			newArray[i][0]=squares2.get(i).getY();
+			newArray[i][1]=squares2.get(i).getX();
+		}
+		return newArray;
+	}
+
+
 	
 	}
