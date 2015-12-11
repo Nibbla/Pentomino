@@ -16,7 +16,7 @@ import javax.swing.JLabel;
 
 public class Configuration {
 	
-	protected static String rotate ="Up", left= "Left", right="Right", down="Down", pause="P";
+	protected static String rotate ="Up", left= "Left", right="Right", down="Down", AllTheWayDown = "Space";
 	private static ArrayList<Choice> choices;
 	
 	public static void openConfig(JFrame frame){
@@ -36,8 +36,8 @@ public class Configuration {
 		down.select(Configuration.down);
 		Choice rotate =addChoice("Rotate", options, 150, 80);
 		rotate.select(Configuration.rotate);
-		Choice pause =addChoice("Pause", options, 30, 130);
-		pause.select(Configuration.pause);
+		Choice AllTheWayDown =addChoice("AllTheWayDown", options, 30, 130);
+		AllTheWayDown.select(Configuration.AllTheWayDown);
 		
 		JButton done = new JButton("Done");
 		done.setBounds(150, 220, 100, 30);
@@ -56,13 +56,13 @@ public class Configuration {
 		Choice right = choices.get(1);
 		Choice down = choices.get(2);
 		Choice rotate = choices.get(3);
-		Choice pause = choices.get(4);
+		Choice allTheWayDown = choices.get(4);
 		
 		Configuration.left = left.getSelectedItem();
 		Configuration.right = right.getSelectedItem();
 		Configuration.down = down.getSelectedItem();
 		Configuration.rotate = rotate.getSelectedItem();
-		Configuration.pause = pause.getSelectedItem();
+		Configuration.AllTheWayDown = allTheWayDown.getSelectedItem();
 		
 		try{
 			saveConfig();
@@ -72,6 +72,14 @@ public class Configuration {
 		
 	}
 	
+	/**
+	 * adds the keys as possible choices in drop down menu
+	 * @param name name of the key
+	 * @param options 
+	 * @param x 
+	 * @param y
+	 * @return the key
+	 */
 	public static Choice addChoice(String name, JFrame options, int x, int y){
 		JLabel label = new JLabel(name);
 		label.setBounds(x, y-20, 100, 20);
@@ -123,7 +131,7 @@ public class Configuration {
 			saveConfig();
 			return;
 		}
-		if(!values.containsKey("left") || !values.containsKey("right") || !values.containsKey("rotate") || !values.containsKey("down") || !values.containsKey("pause")){
+		if(!values.containsKey("left") || !values.containsKey("right") || !values.containsKey("rotate") || !values.containsKey("down") || !values.containsKey("AllTheWayDown")){
 			System.out.println("Invalid names in config, saving defaults");
 			saveConfig();
 			return;
@@ -132,9 +140,9 @@ public class Configuration {
 		String right = values.get("right");
 		String rotate = values.get("rotate");
 		String down = values.get("down");
-		String pause = values.get("pause");
+		String AllTheWayDown = values.get("AllTheWayDown");
 		
-		if (!(getKeyNames().contains(left) && getKeyNames().contains(right) && getKeyNames().contains(rotate) && getKeyNames().contains(down) && getKeyNames().contains(pause))){
+		if (!(getKeyNames().contains(left) && getKeyNames().contains(right) && getKeyNames().contains(rotate) && getKeyNames().contains(down) && getKeyNames().contains(AllTheWayDown))){
 			System.out.println("Invalid key in config, saving defaults");
 			return;
 		}
@@ -142,9 +150,10 @@ public class Configuration {
 		Configuration.right = right;
 		Configuration.rotate = rotate;
 		Configuration.down = down;
-		Configuration.pause = pause;
+		Configuration.AllTheWayDown = AllTheWayDown;
 		
 		
+		s.close();
 	}
 	
 	public static void saveConfig() throws Exception{
@@ -167,7 +176,7 @@ public class Configuration {
 		pw.println("left:" + left);
 		pw.println("rotate:" + rotate);
 		pw.println("down:" + down);		
-		pw.println("pause:" + pause);
+		pw.println("AllTheWayDown:" + AllTheWayDown);
 		pw.close();
 	}
 	

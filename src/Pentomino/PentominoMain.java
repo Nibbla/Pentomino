@@ -1,9 +1,11 @@
 package Pentomino;
 
+import java.awt.BorderLayout;
 import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferStrategy;
@@ -18,18 +20,25 @@ import Pentomino.Interfaces.TetrisGame;
 
 public class PentominoMain extends Canvas implements Runnable,Display{
 	
-	protected static final int WIDTH=250, HEIGHT=750;
+	protected static final int WIDTH=500, HEIGHT=750;
 	
 	protected TetrisGame game;
 	private Controller controller;
-	private Board board;
+	private static Board board;
 	private int endgamecount;
 	private Timer timerEndgame;
 	private boolean endGame2;
 
+
 	private boolean oneTime;
 	private static PentominoMain pm ;
-	
+	protected static JLabel scoreLabel2 = new JLabel();
+
+	public static boolean bot = false;
+	/**
+	 * the main method where the main JFrame is created and most methods are called
+	 * @param args
+	 */
 	public static void main(String[] args){
 		pm = new PentominoMain();
 		pm.controller = new Controller();
@@ -39,7 +48,7 @@ public class PentominoMain extends Canvas implements Runnable,Display{
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setLocationRelativeTo(null);
 		frame.setResizable(false);
-		frame.setLayout(null);
+		frame.setLayout(new BorderLayout());
 		
 		KeyGetter.loadKeys();
 		try {
@@ -59,25 +68,52 @@ public class PentominoMain extends Canvas implements Runnable,Display{
 		newGame.addActionListener(new ActionListener(){
 			
 			public void actionPerformed(ActionEvent e){
-				startNewGame(pm);
+				startNewGame(pm,"normal");
 				System.out.println("Starting New Game...");
+			}
+		});
+		
+		JMenuItem optimalSolution = new JMenuItem("Optimal Solution");
+		
+		optimalSolution.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				startNewGame(pm, "special");
+				System.out.println("Starting optimal solution...");
 			}
 		});
 		
 		JMenuItem highScore = new JMenuItem("High Score");
 		highScore.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				int highscore = 0; // replace this with getHighscoreMethod later
 				
-				//@
+				
+				
 				final JFrame alert = new JFrame("High Score");
-				alert.setSize(500, 400);
+				alert.setSize(250, 300);
 				alert.setLayout(null);
 				alert.setLocationRelativeTo(null);
 				alert.setAlwaysOnTop(true);
 				
-				JLabel score = new JLabel("The high score is: " + highscore);
-				score.setBounds(0, 0, 300, 100);
+alert.setLayout(new GridLayout(7,1));
+				
+				
+	
+				
+				JLabel label1 = new JLabel("The high scores are: \n" );
+				label1.setBounds(50, 0, 100, 25);
+				alert.add(label1);
+				
+				JLabel label2 = new JLabel(board.score.getName1() + ":   " + board.score.getScore1());
+				JLabel label3 = new JLabel(board.score.getName2() + ":   " + board.score.getScore2());
+				JLabel label4 = new JLabel(board.score.getName3() + ":   " + board.score.getScore3());
+				JLabel label5 = new JLabel(board.score.getName4() + ":   " + board.score.getScore4());
+				JLabel label6 = new JLabel(board.score.getName5() + ":   " + board.score.getScore5());
+				
+				alert.add(label2);//.setBounds(0, 25, 100, 25));
+				alert.add(label3);//.setBounds(0, 50, 100, 25));
+				alert.add(label4);//.setBounds(0, 75, 100, 25));
+				alert.add(label5);//.setBounds(0, 100, 100, 25));
+				alert.add(label6);//.setBounds(0, 125, 100, 25));
 				
 				JButton okayButton = new JButton("Okay");
 				okayButton.setBounds(50, 120, 100, 30);
@@ -87,7 +123,7 @@ public class PentominoMain extends Canvas implements Runnable,Display{
 					}
 				});
 				
-				alert.add(score);
+			
 				alert.add(okayButton);
 				alert.setResizable(false);
 				alert.setVisible(true);
@@ -109,16 +145,30 @@ public class PentominoMain extends Canvas implements Runnable,Display{
 			}
 		});
 		
+		JPanel panel = new JPanel();
+		panel.setBounds(250, 0, 250, 750);
+		panel.setLayout(new GridLayout(3,1));
+		
+		JLabel scoreLabel = new JLabel();
+		scoreLabel.setText("                            Your score is:                     " );
+		
+		
+		JPanel smallPanel = new JPanel();
+		smallPanel.setLayout(new GridLayout(2,1));
+		smallPanel.add(scoreLabel);
+		smallPanel.add(scoreLabel2);
+		panel.add(smallPanel);
 		
 		pm.setBounds(0, 25, WIDTH, HEIGHT-25);
 		
-		frame.add(pm);
+		frame.add(pm, BorderLayout.CENTER);
+		frame.add(panel, BorderLayout.EAST);
 		bar.add(file);
 		file.add(newGame);
 		file.add(highScore);
 		file.add(options);
 		file.add(exit);
-		frame.add(bar);
+		frame.add(bar, BorderLayout.NORTH);
 		frame.setVisible(true);
 		pm.start();
 		
@@ -129,7 +179,7 @@ public class PentominoMain extends Canvas implements Runnable,Display{
 	 * @param pm 
 	 * 
 	 */
-	public static void startNewGame(final PentominoMain pm) {
+	public static void startNewGame(final PentominoMain pm, String special) {
 		pm.game = new Game((Control)pm.controller, (Display)pm, null);
 		pm.endgamecount=0;
 		pm.endGame2 = false;
@@ -142,15 +192,25 @@ public class PentominoMain extends Canvas implements Runnable,Display{
 				
 			}
 		});
+		if (special.equals("special"))
+			Pentomino.special=true;
+		else 
+			Pentomino.special=false;
 		pm.game.start();
 	}
 
+	/**
+	 * starts the timer
+	 */
 	public void start() {
 		Thread t = new Thread(this);
 		t.setPriority(Thread.MAX_PRIORITY);
 		t.start();
 	}
 
+	/**
+	 * does the rendering
+	 */
 	public void run(){
 		boolean running = true;
 		initialize();
@@ -171,6 +231,9 @@ public class PentominoMain extends Canvas implements Runnable,Display{
 		
 	}
 	
+	/**
+	 * initializes controller
+	 */
 	public void initialize(){
 		
 		this.addKeyListener(controller);
@@ -178,13 +241,17 @@ public class PentominoMain extends Canvas implements Runnable,Display{
 		
 	}
 	
+	/**
+	 * draws the welcome screen and calls the method to draw the board
+	 * @param g the graphics 
+	 */
 	public void render(Graphics2D g){
 	if (board==null){
 		g.setColor(Color.MAGENTA);
 		g.fillRect(0, 0, WIDTH, HEIGHT);
-		g.setColor(Color.WHITE);
-		g.setFont(new Font("Calibri", Font.PLAIN, 20));
-		g.drawString("Pentomino", 140, 50);
+		g.setColor(Color.MAGENTA);
+		g.setFont(new Font("Calibri", Font.PLAIN, 28));
+		g.drawString("Pentomino", 95, 250);
 		}else{
 		drawBoard(g,WIDTH,HEIGHT-25,board);
 		}
@@ -247,6 +314,13 @@ public class PentominoMain extends Canvas implements Runnable,Display{
 		}
 	}
 
+	/**
+	 * draws the ending animation, the rainbow
+	 * @param g the graphics
+	 * @param width2 the width of the board
+	 * @param height2 the height of the board
+	 * @param board2 the board
+	 */
 	private void drawEndgame(Graphics2D g, int width2, int height2, Board board2) {
 		Square[][] s = board2.getFullBoard();
 		int count = 0;
@@ -308,6 +382,9 @@ public class PentominoMain extends Canvas implements Runnable,Display{
 		
 	}
 
+	/**
+	 * sets the board
+	 */
 	public void setData(Board b) {
 		this.board = b;
 		
@@ -318,6 +395,10 @@ public class PentominoMain extends Canvas implements Runnable,Display{
 		
 	}
 
+	/**
+	 * getter for the display interface
+	 * @return the interface parameter
+	 */
 	public static Display getDisplayInstance() {
 		
 		return pm;
@@ -331,6 +412,9 @@ public class PentominoMain extends Canvas implements Runnable,Display{
 		
 	}
 
+	/**
+	 * closes the program
+	 */
 	public void close() {
 		System.out.println("Closing...");
 		System.exit(0);
@@ -338,16 +422,28 @@ public class PentominoMain extends Canvas implements Runnable,Display{
 		
 	}
 
+	/**
+	 * getter for the controller
+	 * @return the controller
+	 */
 	public Control getController() {
 		
 		return controller;
 	}
 
+	/**
+	 * getter for the board
+	 * @return the board
+	 */
 	public Board getBoard() {
 		return this.board;
 		
 	}
 	
+	/**
+	 * getter for the game
+	 * @return game interface
+	 */
 	public TetrisGame getGame() {
 		
 		return game;

@@ -2,4 +2,4 @@ right:Right
 left:Left
 rotate:Up
 down:Down
-pause:P
+AllTheWayDown:Space

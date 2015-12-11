@@ -51,7 +51,10 @@ public abstract interface TetrisGame {
 	 * 
 	 */
 	abstract void UpdateScore();
-	
+	/**
+	 * @return the current score of this player
+	 */
+	abstract long getDestroyedLines();
 	/**
 	 * @return the current score of this player
 	 */

@@ -17,9 +17,9 @@ import Pentomino.Interfaces.TetrisGame;
  * @author Nibbla
  *
  */
-public class Game implements TetrisGame{
+public class Game implements TetrisGame
+{
 	Control c;
-	
 	Display d;
 	Board b;
 	
@@ -27,15 +27,23 @@ public class Game implements TetrisGame{
 	private Timer t1;
 	private Timer t2;
 
-	private int points;
+	private int points=0;
 
 	private String move;
 	
-   public Game(Control c, Display d,ConfigurationInterface CI){
+	/**
+	 *  contructor to create game in beginning
+	 * @param c the control parameter
+	 * @param d the display parameter
+	 * @param CI the configuration interface parameter
+	 */
+   public Game(Control c, Display d,ConfigurationInterface CI)
+   {
 	   this.c = c;
 	   this.d = d;
 	  
-	   if (CI == null){
+	   if (CI == null)
+	   {
 			createStandartConfigurationInterface();
 			CI=this.CI;
 		}else{this.CI=CI;}
@@ -48,14 +56,26 @@ public class Game implements TetrisGame{
 		return b;
 	}
 
-/* (non-Javadoc)
- * @see Pentomino.Interfaces.TetrisGame#start()
- */
-public void start() {
+	/**
+	 * starts the game
+	 */
+public void start() 
+	{
 	points = 0;
+	b.currentScore=0;
+		try 
+		{
+			b.score.loadHighscore();
+		} 
+		catch (Exception e1) 
+		{
+			e1.printStackTrace();
+		}
+		
 	t1 = new javax.swing.Timer(CI.getSpeedOfStep(), new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
 			tick();
+			PentominoMain.scoreLabel2.setText("                  " +b.currentScore);
 		}
 	});
 	 t2 = new javax.swing.Timer(CI.getSpeedOfControl(), new ActionListener() {	
@@ -151,6 +171,7 @@ public String tick() {
 		b.setLivingPentominoDown(); //if endgame aktivates, it maybe removes full lines
 		s += "puff";
 		if (b.isEndgame()) {
+			b.score.updateHighscore(b.currentScore);
 			t1.stop();
 			t2.stop();
 			s += "puffpuff";
@@ -167,6 +188,11 @@ public String tick(String move) {
 	b.setMove(move);
 	String r = MoveControl(c);
 	return r;	
+}
+
+public long getDestroyedLines() {
+	
+	return points;
 }
 
 }

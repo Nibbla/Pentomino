@@ -18,12 +18,12 @@ import Pentomino.Interfaces.PentominoInterface;
 	 */
 	public class Pentomino implements PentominoInterface
 	{
+		public static boolean special = false;
+		public static int counter;
 		ArrayList<Square> squares = new ArrayList<Square>();
 		String name = "";
 		int index = 0;
-		//TODO rename all the arrays so that they can somehow be chosen.
 		
-		//
 		protected Square[] pa0= {Square(0,1),Square(1,1),Square(0,0),Square(1,0),Square(0,-1)};
 		protected Square[] pa1= {Square(-1,0),Square(0,0),Square(1,0),Square(0,-1),Square(1,-1)};
 		protected Square[] pa2= {Square(0,1),Square(-1,0),Square(0,0),Square(-1,-1),Square(0,-1)};
@@ -109,12 +109,56 @@ import Pentomino.Interfaces.PentominoInterface;
 		private Random r;
 		
 		
-		public Square Square(int j, int k) {
-			Square a=new Square(j,k);
+		
+		/**
+		 * create new square for pentomino
+		 * @param x coordinate
+		 * @param y coordinate
+		 * @return square
+		 */
+		public Square Square(int x, int y) {
+			Square a=new Square(x,y);
 			return a;
 		}
 		
+		/**
+		 * if we are playing the optimal order it displays the pentominoes one after the other in that order
+		 * otherwise it displays a random pentomino 
+		 */
 		public Pentomino() {
+		if (special ){
+			ArrayList<Square[]> pento = new ArrayList<Square[]>();
+			pento.add(va2);
+			pento.add(zb1);
+			pento.add(fa3);
+			pento.add(na2);
+			pento.add(pa0);
+			pento.add(wa3);
+			pento.add(ta1);
+			pento.add(yb0);
+			pento.add(ia0);
+			pento.add(xa0);
+			pento.add(ua3);
+			pento.add(la0);
+	
+			index = counter++%pento.size();
+						
+			boolean rainbow = false;
+			Color c = ColorE.colorM();
+			Square s = new Square(3,2); 
+			Square[] newPiece = copyPentomino(pento.get(index));
+			
+			
+			for (Square square : newPiece) {
+				if (rainbow)square.setC(ColorE.colorM());else square.setC(c);
+			}
+			squares.add(newPiece[0]);
+			squares.add(newPiece[1]);
+			squares.add(newPiece[2]);
+			squares.add(newPiece[3]);
+			squares.add(newPiece[4]);
+			
+			}else{
 			//TODO modify the constructor that a random pentomino gets choosen. Depending on the chosen pentomino, a different color should be used
 			loadPentominosIntoArray();
 			Random r = new Random();
@@ -142,11 +186,18 @@ import Pentomino.Interfaces.PentominoInterface;
 			squares.add(newPiece[3]);
 			squares.add(newPiece[4]);
 			
+			}
 		}
-		
 
 	
 
+
+		/**
+		 * gets the index of the pentomino given the name
+		 * @param string the name
+		 * @param spellcheck checks if the name is valid
+		 * @return the index
+		 */
 		private int getIndexOfPentomino(String string, boolean spellcheck) {
 			int index = -1;
 			//if (name.length()>3)throw new java.lang.Exception(name + "bigger then" + 3);
@@ -160,7 +211,11 @@ import Pentomino.Interfaces.PentominoInterface;
 		}
 
 		
-
+		/**
+		 * creates a copy of the pentomino
+		 * @param squares the pentomino
+		 * @return the new pentomino
+		 */
 		private Square[] copyPentomino(
 				Square[] squares) {
 			Square[] newPiece = new Square[5];
@@ -172,6 +227,10 @@ import Pentomino.Interfaces.PentominoInterface;
 			return newPiece;
 		}
 
+		/**
+		 * this puts all the names of the pentominoes in an arrayList
+		 * @return the arrayList
+		 */
 		private  ArrayList<String> loadPentominosNamesIntoArray() {
 			ArrayList<String> pentomino= new ArrayList<String>(80);
 			pentomino.add("pa0");
@@ -258,6 +317,10 @@ import Pentomino.Interfaces.PentominoInterface;
 			return pentomino;
 			
 		}
+		/**
+		 * this puts the arrangement of the squares of every pentomino in an array list
+		 * @return the array list
+		 */
 		private  ArrayList<Square[]> loadPentominosIntoArray() {
 			ArrayList<Square[]> pentomino= new ArrayList<Square[]>(80);
 			pentomino.add(pa0);
@@ -347,11 +410,19 @@ import Pentomino.Interfaces.PentominoInterface;
 
 		
 
+		/**
+		 * returns the squares of a pentomino
+		 * @return the array of squares
+		 */
 		public Square[] getSquares() {
 			
 			return squares.toArray(new Square[squares.size()]);
 		}
 
+		/**
+		 * rotates the pentominoes
+		 * @param right
+		 */
 		public void rotate(boolean right) {
 			System.out.println("rotate right" + right);
 			int j = 0;
@@ -396,6 +467,10 @@ import Pentomino.Interfaces.PentominoInterface;
 		}
 		
 		
+		/**
+		 * moves the pentomino in horizontal direction
+		 * @param j the x value
+		 */
 		public void moveX(int j) {
 			for (Square s : squares) {
 				s.setX(s.getX()+j);
@@ -403,6 +478,10 @@ import Pentomino.Interfaces.PentominoInterface;
 			
 		}
 
+		/**
+		 * moves the pentomino in vertical direction
+		 * @param j the y value
+		 */
 		public void moveY(int j) {
 			for (Square s : squares) {
 				s.setY(s.getY()+j);
@@ -410,9 +489,11 @@ import Pentomino.Interfaces.PentominoInterface;
 			
 		}
 
+	
 	/**
-	 * @param line
-	 * @return true if the pentomino is complete underneath that line
+	 * checks if the pentomino is completely below a line
+	 * @param line the line
+	 * @return true if the pentomino is completely underneath that line
 	 */
 	public boolean completlyBelow(int line) {
 			
@@ -429,8 +510,9 @@ import Pentomino.Interfaces.PentominoInterface;
 	
 	
 	/**
+	 * checks if the pentomino is completely above a given line
 	 * @param line
-	 * @return return true if pentomino is complete above this line
+	 * @return return true if pentomino is completely above this line
 	 */
 	public boolean completlyAbove(int line) {
 		
@@ -443,8 +525,9 @@ import Pentomino.Interfaces.PentominoInterface;
 		return false;
 	}
 	/**
-	 * @param line
-	 * @return return true if pentomino is complete to the right of this row
+	 * checks if the pentomino is completely to the right of a given column
+	 * @param column
+	 * @return return true if pentomino is complete to the right of this column
 	 */
 	public boolean completlyRight(int column) {
 		int count = 0;
@@ -457,8 +540,9 @@ import Pentomino.Interfaces.PentominoInterface;
 		
 	}
 	/**
-	 * @param line
-	 * @return return true if pentomino is complete to the left of this line
+	 * checks if the pentomino is completely to the left of a given column
+	 * @param column 
+	 * @return return true if pentomino is completely to the left of this column
 	 */
 	public boolean completlyLeft(int column) {
 		int count = 0;
@@ -471,7 +555,9 @@ import Pentomino.Interfaces.PentominoInterface;
 		
 	}
 	
-	 /** @param line
+		/**
+	 * checks if the pentomino is somewhere underneath that line
+	 * @param line
 	 * @return true if the pentomino is somewhere underneath that line
 	 */
 	public boolean below(int line) {
@@ -488,9 +574,10 @@ import Pentomino.Interfaces.PentominoInterface;
 	}
 	
 	
-	/**
+/**
+	 * checks if pentomino is completely above this line
 	 * @param line
-	 * @return return true if pentomino is complete above this line
+	 * @return return true if pentomino is completely above this line
 	 */
 	public boolean above(int line) {
 		
@@ -503,8 +590,10 @@ import Pentomino.Interfaces.PentominoInterface;
 		return false;
 	}
 	/**
-	 * @param line
-	 * @return return true if pentomino is complete to the right of this collumn
+	/**
+	 * checks if pentomino is completely to the right of this column
+	 * @param column
+	 * @return return true if pentomino is completely to the right of this column
 	 */
 	public boolean right(int column) {
 		
@@ -516,8 +605,10 @@ import Pentomino.Interfaces.PentominoInterface;
 		
 	}
 	/**
-	 * @param line
-	 * @return return true if pentomino is partly to the left of this line
+
+	 * checks if pentomino is completely to the left of this column
+	 * @param column
+	 * @return return true if pentomino is completely to the left of this column
 	 */
 	public boolean left(int column) {
 		for (Square s : squares) {

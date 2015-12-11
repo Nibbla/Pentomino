@@ -6,7 +6,7 @@ import java.awt.event.ActionListener;
 
 public interface Control {
 		public enum Buttons{
-			Up,Left,Right,Down,Select,Start,RotateRight,RotateLeft
+			Up,Left,Right,Down,Select,AllTheWayDown,RotateRight,RotateLeft
 		}
 		
 		
